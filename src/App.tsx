@@ -8,6 +8,7 @@ import ModeSelectionPage from './pages/auth/ModeSelectionPage'
 import WordsPage from './pages/WordsPage'
 import GamesPage from './pages/GamesPage'
 import StoriesPage from './pages/StoriesPage'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   return (
@@ -16,12 +17,12 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
-        <Route path="/avatar-selection" element={<AvatarSelectionPage />} />
-        <Route path="/character-presentation" element={<CharacterPresentationPage />} />
-        <Route path="/mode-selection" element={<ModeSelectionPage />} />
-        <Route path="/words" element={<WordsPage />} />
-        <Route path="/games" element={<GamesPage />} />
-        <Route path="/stories" element={<StoriesPage />} />
+        <Route path="/avatar-selection" element={<ProtectedRoute><AvatarSelectionPage /></ProtectedRoute>} />
+        <Route path="/character-presentation" element={<ProtectedRoute><CharacterPresentationPage /></ProtectedRoute>} />
+        <Route path="/mode-selection" element={<ProtectedRoute><ModeSelectionPage /></ProtectedRoute>} />
+        <Route path="/words" element={<ProtectedRoute><WordsPage /></ProtectedRoute>} />
+        <Route path="/games" element={<ProtectedRoute><GamesPage /></ProtectedRoute>} />
+        <Route path="/stories" element={<ProtectedRoute><StoriesPage /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )
