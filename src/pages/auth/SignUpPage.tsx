@@ -3,17 +3,16 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import fondoGeneral from '../../assets/Images/Backgrounds/fondo_general.svg'
 import zorro from '../../assets/Images/FoxImage/zorro_pagina_2,3.png'
-import globo from '../../assets/Images/Texts/texto_2_globo.png'
+import globo from '../../assets/Images/Texts/texto_3_globo.png'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
-import { supabase } from '../../utils/supabase'
+import continueButton from '../../assets/Images/Buttons/continue_button.png'
 import '../../styles/App.css'
 
 function SignUpPage() {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    name: ''
+    name: '',
+    folio: '',
+    age: ''
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -28,43 +27,26 @@ function SignUpPage() {
   }
 
   const handleSignUp = async () => {
-    if (!formData.email.trim() || !formData.password.trim() || !formData.name.trim()) {
+    if (!formData.name.trim() || !formData.folio.trim() || !formData.age.trim()) {
       setError('Por favor completa todos los campos')
       return
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden')
-      return
-    }
-
-    if (formData.password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres')
+    if (isNaN(Number(formData.age)) || Number(formData.age) < 1 || Number(formData.age) > 120) {
+      setError('Por favor ingresa una edad válida')
       return
     }
 
     setLoading(true)
     setError('')
 
-    const { error } = await supabase.auth.signUp({
-      email: formData.email.trim(),
-      password: formData.password,
-      options: {
-        data: {
-          name: formData.name.trim()
-        }
-      }
-    })
-
-    setLoading(false)
-
-    if (error) {
-      setError('Error al crear cuenta: ' + error.message)
-      return
-    }
-
-    navigate('/login')
+    // Simulate sign up process
+    setTimeout(() => {
+      setLoading(false)
+      navigate('/login')
+    }, 1000)
   }
+
 
   return (
     <div
@@ -186,8 +168,8 @@ function SignUpPage() {
         transition={{ delay: 0.4, duration: 0.6, ease: 'easeOut' }}
         style={{
           position: 'absolute',
-          top: '45%',
-          left: '50%',
+          top: '250px',
+          left: '250px',
           transform: 'translate(-50%, -50%)',
           width: '500px',
           background: 'rgba(255, 255, 255, 0.95)',
@@ -196,18 +178,14 @@ function SignUpPage() {
           zIndex: 1,
           boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
         }}
-      >
-        <h2 style={{ 
-          fontSize: '32px', 
-          fontWeight: '700', 
-          color: '#333', 
-          marginBottom: '30px',
-          textAlign: 'center'
+      > 
+        {/* Campo Nombre */}
+        <div style={{ 
+          marginBottom: '25px',
+          backgroundColor: '#f97316',
+          borderRadius: '10px',
+          padding: '15px'
         }}>
-          Crear Cuenta
-        </h2>
-        
-        <div style={{ marginBottom: '20px' }}>
           <input
             type="text"
             name="name"
@@ -216,115 +194,90 @@ function SignUpPage() {
             onChange={handleInputChange}
             style={{
               width: '100%',
-              padding: '15px',
-              borderRadius: '10px',
-              border: '2px solid #e5e7eb',
-              fontSize: '16px',
+              background: 'transparent',
+              border: 'none',
               outline: 'none',
-              transition: 'border-color 0.3s',
+              color: '#fff',
+              fontSize: '16px',
+              fontWeight: '600',
             }}
-            onFocus={(e) => e.target.style.borderColor = '#f97316'}
-            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
           />
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
+        {/* Campo Folio */}
+        <div style={{ 
+          marginBottom: '25px',
+          backgroundColor: '#f97316',
+          borderRadius: '10px',
+          padding: '15px'
+        }}>
           <input
-            type="email"
-            name="email"
-            placeholder="Correo electrónico"
-            value={formData.email}
+            type="text"
+            name="folio"
+            placeholder="Número de folio"
+            value={formData.folio}
             onChange={handleInputChange}
             style={{
               width: '100%',
-              padding: '15px',
-              borderRadius: '10px',
-              border: '2px solid #e5e7eb',
-              fontSize: '16px',
+              background: 'transparent',
+              border: 'none',
               outline: 'none',
-              transition: 'border-color 0.3s',
+              color: '#fff',
+              fontSize: '16px',
+              fontWeight: '600',
             }}
-            onFocus={(e) => e.target.style.borderColor = '#f97316'}
-            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
           />
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
+        {/* Campo Edad */}
+        <div style={{ 
+          marginBottom: '30px',
+          backgroundColor: '#f97316',
+          borderRadius: '10px',
+          padding: '15px'
+        }}>
           <input
-            type="password"
-            name="password"
-            placeholder="Contraseña"
-            value={formData.password}
+            type="text"
+            name="age"
+            placeholder="Edad"
+            value={formData.age}
             onChange={handleInputChange}
             style={{
               width: '100%',
-              padding: '15px',
-              borderRadius: '10px',
-              border: '2px solid #e5e7eb',
-              fontSize: '16px',
+              background: 'transparent',
+              border: 'none',
               outline: 'none',
-              transition: 'border-color 0.3s',
+              color: '#fff',
+              fontSize: '16px',
+              fontWeight: '600',
             }}
-            onFocus={(e) => e.target.style.borderColor = '#f97316'}
-            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
           />
         </div>
+      </motion.div>
 
-        <div style={{ marginBottom: '30px' }}>
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirmar contraseña"
-            value={formData.confirmPassword}
-            onChange={handleInputChange}
-            style={{
-              width: '100%',
-              padding: '15px',
-              borderRadius: '10px',
-              border: '2px solid #e5e7eb',
-              fontSize: '16px',
-              outline: 'none',
-              transition: 'border-color 0.3s',
-            }}
-            onFocus={(e) => e.target.style.borderColor = '#f97316'}
-            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-          />
-        </div>
-
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+      {/* Botón continuar abajo a la derecha */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6, duration: 0.5, ease: 'easeOut' }}
+        style={{
+          position: 'absolute',
+          bottom: '10px',
+          right: '20px',
+          zIndex: 1,
+        }}
+      >
+        <img
+          src={continueButton}
+          alt="Continuar"
           onClick={handleSignUp}
-          disabled={loading}
           style={{
-            width: '100%',
-            padding: '15px',
-            borderRadius: '10px',
-            border: 'none',
-            background: loading ? '#94a3b8' : '#f97316',
-            color: '#fff',
-            fontSize: '18px',
-            fontWeight: '700',
+            width: '140px',
+            borderRadius: '50%',
             cursor: loading ? 'wait' : 'pointer',
-            transition: 'background-color 0.3s',
+            opacity: loading ? 0.6 : 1,
           }}
-        >
-          {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
-        </motion.button>
-
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <Link 
-            to="/login" 
-            style={{ 
-              color: '#f97316', 
-              textDecoration: 'none',
-              fontSize: '16px',
-              fontWeight: '600'
-            }}
-          >
-            ¿Ya tienes cuenta? Inicia sesión
-          </Link>
-        </div>
+        />
       </motion.div>
     </div>
   )
