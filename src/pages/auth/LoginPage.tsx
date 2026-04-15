@@ -22,18 +22,27 @@ function LoginPage() {
     setLoading(true)
     setError('')
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email: search.trim(),
-      password: search.trim(),
+    const email = `${search.trim()}@vitalink.com`
+    const password = 'Vitalink_2024#'
+
+    console.log('Intentando login con:', { email, password })
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     })
+
+    console.log('Respuesta de Supabase:', { data, error })
 
     setLoading(false)
 
     if (error) {
-      setError('Folio no encontrado')
+      console.error('Error de login:', error.message)
+      setError(`Folio no encontrado: ${error.message}`)
       return
     }
 
+    console.log('Login exitoso, redirigiendo...')
     navigate('/team-onboarding')
   }
 

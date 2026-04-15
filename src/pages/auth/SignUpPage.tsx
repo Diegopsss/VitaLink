@@ -6,6 +6,7 @@ import zorro from '../../assets/Images/FoxImage/zorro_pagina_2,3.png'
 import globo from '../../assets/Images/Texts/texto_3_globo.png'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import continueButton from '../../assets/Images/Buttons/continue_button.png'
+import { supabase } from '../../utils/supabase'
 import '../../styles/App.css'
 
 function SignUpPage() {
@@ -16,6 +17,8 @@ function SignUpPage() {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
+  const [registeredFolio, setRegisteredFolio] = useState('')
   const navigate = useNavigate()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,11 +43,34 @@ function SignUpPage() {
     setLoading(true)
     setError('')
 
-    // Simulate sign up process
-    setTimeout(() => {
-      setLoading(false)
-      navigate('/login')
-    }, 1000)
+    const email = `${formData.folio.trim()}@vitalink.com`
+    const password = 'Vitalink_2024#'
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name: formData.name.trim(),
+          age: formData.age.trim()
+        },
+        emailRedirectTo: undefined
+      }
+    })
+
+    setLoading(false)
+
+    if (error) {
+      if (error.message.includes('already registered')) {
+        setError('Este folio ya está registrado')
+      } else {
+        setError('Error al crear la cuenta. Intenta nuevamente')
+      }
+      return
+    }
+
+    setRegisteredFolio(formData.folio.trim())
+    setSuccess(true)
   }
 
 
@@ -107,6 +133,59 @@ function SignUpPage() {
           zIndex: 2,
         }}
       />
+
+      {/* Modal de éxito */}
+      {success && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            zIndex: 100,
+          }}
+        >
+          <div
+            style={{
+              background: '#fff',
+              borderRadius: '20px',
+              padding: '40px 48px',
+              textAlign: 'center',
+              maxWidth: '380px',
+              width: '90%',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
+            }}
+          >
+            <p style={{ fontSize: '48px', margin: '0 0 12px' }}>✅</p>
+            <p style={{ fontSize: '20px', fontWeight: '700', color: '#333', margin: '0 0 8px' }}>
+              ¡Listo!
+            </p>
+            <p style={{ fontSize: '16px', color: '#666', margin: '0 0 24px' }}>
+              Folio <strong>{registeredFolio}</strong> registrado
+            </p>
+            <button
+              onClick={() => navigate('/login')}
+              style={{
+                padding: '12px 32px',
+                borderRadius: '12px',
+                border: 'none',
+                background: '#f97316',
+                color: '#fff',
+                fontSize: '16px',
+                fontWeight: '700',
+                cursor: 'pointer',
+              }}
+            >
+              Continuar
+            </button>
+          </div>
+        </motion.div>
+      )}
 
       {/* Modal de error */}
       {error && (
