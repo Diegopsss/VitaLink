@@ -1,0 +1,33 @@
+.homepage {
+  position: fixed;
+  inset: 0;
+  background-color: #7ed957;
+  overflow: hidden;
+}
+
+.homepage-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center top;
+}
+
+.vocalia-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding-bottom: 8px;
+}
+
+.vocalia-text {
+  font-size: clamp(80px, 16vw, 220px);
+  font-weight: 900;
+  color: white;
+  letter-spacing: 0.08em;
+  font-family: 'Impact', 'Arial Black', 'Arial Narrow', sans-serif;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 0.9;
+}
