@@ -172,6 +172,7 @@ function SignUpPage() {
           left: '250px',
           transform: 'translate(-50%, -50%)',
           width: '500px',
+          height: '205px',
           background: 'rgba(255, 255, 255, 0.95)',
           borderRadius: '20px',
           padding: '40px',
