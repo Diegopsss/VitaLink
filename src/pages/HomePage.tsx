@@ -1,16 +1,18 @@
-import heroImg from '../assets/hero.png'
-import './HomePage.css'
+import fondoInicio from '../assets/Images/Backgrounds/fondo_inicio.svg'
 
 function HomePage() {
   return (
-    <div className="homepage">
-      <div
-        className="homepage-bg"
-        style={{ backgroundImage: `url(${heroImg})` }}
-      />
-      <div className="vocalia-container">
-        <h1 className="vocalia-text">VOCALIA</h1>
-      </div>
+    <div
+      style={{
+        backgroundImage: `url(${fondoInicio})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        minHeight: '100vh',
+        width: '100%',
+      }}
+    >
+
     </div>
   )
 }
