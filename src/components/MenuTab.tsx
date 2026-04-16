@@ -9,6 +9,7 @@ interface MenuTabProps {
 
 function MenuTab({ isOpen, onClose }: MenuTabProps) {
   const [volume, setVolume] = useState(50)
+  const [error, setError] = useState('')
   const navigate = useNavigate()
 
   const handleResumeGame = () => {
@@ -25,7 +26,17 @@ function MenuTab({ isOpen, onClose }: MenuTabProps) {
   }
 
   const handleReturnHome = () => {
-    // Lógica para regresar al modo de selección
+    // Verificar si hay una sesión activa
+    const sessionData = localStorage.getItem('userSession') || sessionStorage.getItem('userSession')
+    
+    if (!sessionData) {
+      setError('Debes iniciar sesión para acceder a esta función')
+      // Ocultar el error después de 3 segundos
+      setTimeout(() => setError(''), 3000)
+      return
+    }
+    
+    // Si hay sesión, permitir acceso a mode-selection
     navigate('/mode-selection')
   }
 
@@ -192,18 +203,19 @@ function MenuTab({ isOpen, onClose }: MenuTabProps) {
 
               {/* Control de Volumen */}
               <div style={{ 
+                marginTop: '20px', 
+                padding: '20px',
                 backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                borderRadius: '8px',
-                padding: '15px'
+                borderRadius: '10px'
               }}>
                 <label style={{ 
                   display: 'block', 
                   marginBottom: '10px',
                   color: '#333',
-                  fontSize: '14px',
+                  fontSize: '16px',
                   fontWeight: 'bold'
                 }}>
-                  Volumen: {volume}%
+                  Control de Volumen: {volume}%
                 </label>
                 <input
                   type="range"
@@ -213,14 +225,34 @@ function MenuTab({ isOpen, onClose }: MenuTabProps) {
                   onChange={handleVolumeChange}
                   style={{
                     width: '100%',
-                    height: '6px',
-                    borderRadius: '3px',
+                    height: '8px',
+                    borderRadius: '5px',
                     backgroundColor: '#ddd',
                     outline: 'none',
                     cursor: 'pointer',
                   }}
                 />
               </div>
+
+              {/* Mensaje de error */}
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  style={{
+                    marginTop: '15px',
+                    padding: '10px',
+                    backgroundColor: '#f44336',
+                    color: 'white',
+                    borderRadius: '5px',
+                    fontSize: '14px',
+                    textAlign: 'center',
+                  }}
+                >
+                  {error}
+                </motion.div>
+              )}
             </div>
           </motion.div>
         </>

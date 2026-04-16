@@ -5,6 +5,7 @@ import fondoGeneral from '../../assets/Images/Backgrounds/fondo_general.svg'
 import zorro from '../../assets/Images/FoxImage/zorro_pagina_2,3.png'
 import globo from '../../assets/Images/Texts/texto_3_globo.png'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
+import returnButton from '../../assets/Images/Buttons/return_button.png'
 import continueButton from '../../assets/Images/Buttons/continue_button.png'
 import { supabase } from '../../utils/supabase'
 import MenuTab from '../../components/MenuTab'
@@ -136,6 +137,31 @@ function SignUpPage() {
           zIndex: 999,
         }}
       />
+
+      {/* Botón de return */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.5, ease: 'easeOut' }}
+        style={{
+          position: 'absolute',
+          top: '60px',
+          left: '2px',
+          zIndex: 1,
+        }}
+      >
+        <Link to="/login" style={{ display: 'block', cursor: 'pointer' }}>
+          <img
+            src={returnButton}
+            alt="Regresar"
+            style={{
+              width: '95px',
+              borderRadius: '50%',
+              pointerEvents: 'none',
+            }}
+          />
+        </Link>
+      </motion.div>
 
       {/* Modal de éxito */}
       {success && (
