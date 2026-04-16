@@ -8,6 +8,12 @@ import ModeSelectionPage from './pages/auth/ModeSelectionPage'
 import WordsPage from './pages/WordsPage'
 import GamesPage from './pages/GamesPage'
 import StoriesPage from './pages/StoriesPage'
+import AnimalesPage from './pages/AnimalesPage'
+import ColoresPage from './pages/ColoresPage'
+import ComidaPage from './pages/ComidaPage'
+import MusicaPage from './pages/MusicaPage'
+import PersonasPage from './pages/PersonasPage'
+import TransportePage from './pages/TransportePage'
 
 function App() {
   return (
@@ -22,6 +28,12 @@ function App() {
         <Route path="/words" element={<WordsPage />} />
         <Route path="/games" element={<GamesPage />} />
         <Route path="/stories" element={<StoriesPage />} />
+        <Route path="/animales" element={<AnimalesPage />} />
+        <Route path="/colores" element={<ColoresPage />} />
+        <Route path="/comida" element={<ComidaPage />} />
+        <Route path="/musica" element={<MusicaPage />} />
+        <Route path="/personas" element={<PersonasPage />} />
+        <Route path="/transporte" element={<TransportePage />} />
       </Routes>
     </BrowserRouter>
   )

@@ -9,12 +9,14 @@ import signUpButton from '../../assets/Images/Buttons/sign_up_button.png'
 import continueButton from '../../assets/Images/Buttons/continue_button.png'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import { supabase } from '../../utils/supabase'
+import MenuTab from '../../components/MenuTab'
 import '../../styles/App.css'
 
 function LoginPage() {
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
 
   const handleLogin = async () => {
@@ -43,7 +45,7 @@ function LoginPage() {
     }
 
     console.log('Login exitoso, redirigiendo...')
-    navigate('/team-onboarding')
+    navigate('/character-presentation')
   }
 
   return (
@@ -95,6 +97,7 @@ function LoginPage() {
       <img
         src={sidebarButton}
         alt="Sidebar"
+        onClick={() => setIsMenuOpen(true)}
         style={{
           position: 'absolute',
           top: '0px',
@@ -102,7 +105,7 @@ function LoginPage() {
           width: '100px',
           borderRadius: '50%',
           cursor: 'pointer',
-          zIndex: 2,
+          zIndex: 999,
         }}
       />
 
@@ -254,6 +257,9 @@ function LoginPage() {
           />
         </Link>
       </motion.div>
+      
+      {/* Menú pestaña desplegable */}
+      <MenuTab isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>
   )
 }

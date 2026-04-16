@@ -7,6 +7,7 @@ import globo from '../../assets/Images/Texts/texto_3_globo.png'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import continueButton from '../../assets/Images/Buttons/continue_button.png'
 import { supabase } from '../../utils/supabase'
+import MenuTab from '../../components/MenuTab'
 import '../../styles/App.css'
 
 function SignUpPage() {
@@ -18,6 +19,7 @@ function SignUpPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [registeredFolio, setRegisteredFolio] = useState('')
   const navigate = useNavigate()
 
@@ -123,6 +125,7 @@ function SignUpPage() {
       <img
         src={sidebarButton}
         alt="Sidebar"
+        onClick={() => setIsMenuOpen(true)}
         style={{
           position: 'absolute',
           top: '0px',
@@ -130,7 +133,7 @@ function SignUpPage() {
           width: '100px',
           borderRadius: '50%',
           cursor: 'pointer',
-          zIndex: 2,
+          zIndex: 999,
         }}
       />
 
@@ -359,6 +362,9 @@ function SignUpPage() {
           }}
         />
       </motion.div>
+      
+      {/* Menú pestaña desplegable */}
+      <MenuTab isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>
   )
 }
