@@ -1,11 +1,14 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import fondoGeneral from '../../assets/Images/Backgrounds/fondo_general.svg'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import avatares from '../../assets/Images/Buttons/avatares.png'
+import MenuTab from '../../components/MenuTab'
 import '../../styles/App.css'
 
 function AvatarSelectionPage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   return (
     <div
       style={{
@@ -26,6 +29,7 @@ function AvatarSelectionPage() {
       <img
         src={sidebarButton}
         alt="Sidebar"
+        onClick={() => setIsMenuOpen(true)}
         style={{
           position: 'absolute',
           top: '0px',
@@ -33,7 +37,7 @@ function AvatarSelectionPage() {
           width: '100px',
           borderRadius: '50%',
           cursor: 'pointer',
-          zIndex: 2,
+          zIndex: 999,
         }}
       />
 
@@ -92,6 +96,9 @@ function AvatarSelectionPage() {
           />
         </Link>
       </motion.div>
+      
+      {/* Menú pestaña desplegable */}
+      <MenuTab isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>
   )
 }

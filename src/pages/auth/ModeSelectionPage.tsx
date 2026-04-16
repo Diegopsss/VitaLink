@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import fondoGeneral from '../../assets/Images/Backgrounds/fondo_general.svg'
@@ -5,9 +6,11 @@ import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import palabrasButton from '../../assets/Images/Buttons/palabras_button.png'
 import juegosButton from '../../assets/Images/Buttons/juegos_button.png'
 import cuentosButton from '../../assets/Images/Buttons/cuentos_button.png'
+import MenuTab from '../../components/MenuTab'
 import '../../styles/App.css'
 
 function ModeSelectionPage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   return (
     <div
       style={{
@@ -28,6 +31,7 @@ function ModeSelectionPage() {
       <img
         src={sidebarButton}
         alt="Sidebar"
+        onClick={() => setIsMenuOpen(true)}
         style={{
           position: 'absolute',
           top: '0px',
@@ -35,7 +39,7 @@ function ModeSelectionPage() {
           width: '100px',
           borderRadius: '50%',
           cursor: 'pointer',
-          zIndex: 2,
+          zIndex: 999,
         }}
       />
 
@@ -114,6 +118,9 @@ function ModeSelectionPage() {
             />
           </Link>
       </motion.div>
+      
+      {/* Menú pestaña desplegable */}
+      <MenuTab isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>
   )
 }

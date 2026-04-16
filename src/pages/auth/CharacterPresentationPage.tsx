@@ -7,10 +7,12 @@ import texto52Globo from '../../assets/Images/Texts/texto_5_2_globo.png'
 import texto6Globo from '../../assets/Images/Texts/texto_6_globo.png'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import continueButton from '../../assets/Images/Buttons/continue_button.png'
+import MenuTab from '../../components/MenuTab'
 import '../../styles/App.css'
 
 function CharacterPresentationPage() {
   const [currentText, setCurrentText] = useState<'initial' | 'transition' | 'final'>('initial')
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -49,6 +51,7 @@ function CharacterPresentationPage() {
       <img
         src={sidebarButton}
         alt="Sidebar"
+        onClick={() => setIsMenuOpen(true)}
         style={{
           position: 'absolute',
           top: '0px',
@@ -56,7 +59,7 @@ function CharacterPresentationPage() {
           width: '100px',
           borderRadius: '50%',
           cursor: 'pointer',
-          zIndex: 2,
+          zIndex: 999,
         }}
       />
       {/* Texto 5_1_globo - entra por la izquierda */}
@@ -143,6 +146,9 @@ function CharacterPresentationPage() {
           />
         </Link>
       </motion.div>
+      
+      {/* Menú pestaña desplegable */}
+      <MenuTab isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>
   )
 }
