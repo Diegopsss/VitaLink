@@ -8,6 +8,7 @@ import ModeSelectionPage from './pages/auth/ModeSelectionPage'
 import WordsPage from './pages/WordsPage'
 import GamesPage from './pages/GamesPage'
 import StoriesPage from './pages/StoriesPage'
+import ProtectedRoute from './components/ProtectedRoute'
 import AnimalesPage from './pages/AnimalesPage'
 import ColoresPage from './pages/ColoresPage'
 import ComidaPage from './pages/ComidaPage'
@@ -22,18 +23,18 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
-        <Route path="/avatar-selection" element={<AvatarSelectionPage />} />
-        <Route path="/character-presentation" element={<CharacterPresentationPage />} />
-        <Route path="/mode-selection" element={<ModeSelectionPage />} />
-        <Route path="/words" element={<WordsPage />} />
-        <Route path="/games" element={<GamesPage />} />
-        <Route path="/stories" element={<StoriesPage />} />
-        <Route path="/animales" element={<AnimalesPage />} />
-        <Route path="/colores" element={<ColoresPage />} />
-        <Route path="/comida" element={<ComidaPage />} />
-        <Route path="/musica" element={<MusicaPage />} />
-        <Route path="/personas" element={<PersonasPage />} />
-        <Route path="/transporte" element={<TransportePage />} />
+        <Route path="/avatar-selection" element={<ProtectedRoute><AvatarSelectionPage /></ProtectedRoute>} />
+        <Route path="/character-presentation" element={<ProtectedRoute><CharacterPresentationPage /></ProtectedRoute>} />
+        <Route path="/mode-selection" element={<ProtectedRoute><ModeSelectionPage /></ProtectedRoute>} />
+        <Route path="/words" element={<ProtectedRoute><WordsPage /></ProtectedRoute>} />
+        <Route path="/games" element={<ProtectedRoute><GamesPage /></ProtectedRoute>} />
+        <Route path="/stories" element={<ProtectedRoute><StoriesPage /></ProtectedRoute>} />
+        <Route path="/animales" element={<ProtectedRoute><AnimalesPage /></ProtectedRoute>} />
+        <Route path="/colores" element={<ProtectedRoute><ColoresPage /></ProtectedRoute>} />
+        <Route path="/comida" element={<ProtectedRoute><ComidaPage /></ProtectedRoute>} />
+        <Route path="/musica" element={<ProtectedRoute><MusicaPage /></ProtectedRoute>} />
+        <Route path="/personas" element={<ProtectedRoute><PersonasPage /></ProtectedRoute>} />
+        <Route path="/transporte" element={<ProtectedRoute><TransportePage /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )
