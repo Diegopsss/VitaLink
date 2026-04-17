@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import fondoGeneral from '../assets/Images/Backgrounds/fondo_general.svg'
+import icono404 from '../assets/Images/FoxImage/404route.png'
 
 function NotFoundPage() {
   const navigate = useNavigate()
@@ -22,11 +23,32 @@ function NotFoundPage() {
       }}
     >
       <motion.div
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        style={{
+          marginRight: '40px',
+        }}
+      >
+        <img
+          src={icono404}
+          alt="404 Icon"
+          style={{
+            width: '400px',
+            height: '400px',
+            marginLeft: '-100px',
+            filter: 'drop-shadow(4px 4px 8px rgba(0,0,0,0.2))',
+          }}
+        />
+      </motion.div>
+      
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
         style={{
           textAlign: 'center',
+          marginLeft: '-100px',
           background: 'rgba(255, 255, 255, 0.95)',
           borderRadius: '30px',
           padding: '60px 80px',
@@ -43,6 +65,7 @@ function NotFoundPage() {
             fontWeight: '900',
             color: '#f97316',
             margin: '0 0 20px',
+            marginBottom: '40px',
             textShadow: '4px 4px 0px rgba(0,0,0,0.1)',
           }}
         >
