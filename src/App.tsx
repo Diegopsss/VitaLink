@@ -15,6 +15,7 @@ import ComidaPage from './pages/ComidaPage'
 import MusicaPage from './pages/MusicaPage'
 import PersonasPage from './pages/PersonasPage'
 import TransportePage from './pages/TransportePage'
+import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/musica" element={<ProtectedRoute><MusicaPage /></ProtectedRoute>} />
         <Route path="/personas" element={<ProtectedRoute><PersonasPage /></ProtectedRoute>} />
         <Route path="/transporte" element={<ProtectedRoute><TransportePage /></ProtectedRoute>} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   )
