@@ -26,18 +26,8 @@ function MenuTab({ isOpen, onClose }: MenuTabProps) {
   }
 
   const handleReturnHome = () => {
-    // Verificar si hay una sesión activa
-    const sessionData = localStorage.getItem('userSession') || sessionStorage.getItem('userSession')
     
-    if (!sessionData) {
-      setError('Debes iniciar sesión para acceder a esta función')
-      // Ocultar el error después de 3 segundos
-      setTimeout(() => setError(''), 3000)
-      return
-    }
-    
-    // Si hay sesión, permitir acceso a mode-selection
-    navigate('/mode-selection')
+    navigate('/login')
   }
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
