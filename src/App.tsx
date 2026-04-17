@@ -4,6 +4,11 @@ import LoginPage from './pages/auth/LoginPage'
 import SignUpPage from './pages/auth/SignUpPage'
 import AvatarSelectionPage from './pages/auth/AvatarSelectionPage'
 import CharacterPresentationPage from './pages/auth/CharacterPresentationPage'
+import ConejoPerdidoPage from './pages/cuento/ConejoPerdidoPage'
+import ArdillaHambrientaPage from './pages/cuento/ArdillaHambrientaPage'
+import MapacheLibroPage from './pages/cuento/MapacheLibroPage'
+import TortugaSabiaPage from './pages/cuento/TortugaSabiaPage'
+import ZumoAmigosPage from './pages/cuento/ZumoAmigosPage'
 import ModeSelectionPage from './pages/auth/ModeSelectionPage'
 import WordsPage from './pages/WordsPage'
 import GamesPage from './pages/GamesPage'
@@ -38,6 +43,11 @@ function App() {
         <Route path="/personas" element={<ProtectedRoute><PersonasPage /></ProtectedRoute>} />
         <Route path="/transporte" element={<ProtectedRoute><TransportePage /></ProtectedRoute>} />
         <Route path="/car-game" element = {<ProtectedRoute><CarGames /></ProtectedRoute>} />
+        <Route path="/cuento/conejo-perdido" element={<ProtectedRoute><ConejoPerdidoPage /></ProtectedRoute>} />
+        <Route path="/cuento/ardilla-hambrienta" element={<ProtectedRoute><ArdillaHambrientaPage /></ProtectedRoute>} />
+        <Route path="/cuento/mapache-libro" element={<ProtectedRoute><MapacheLibroPage /></ProtectedRoute>} />
+        <Route path="/cuento/tortuga-sabia" element={<ProtectedRoute><TortugaSabiaPage /></ProtectedRoute>} />
+        <Route path="/cuento/zumo-amigos" element={<ProtectedRoute><ZumoAmigosPage /></ProtectedRoute>} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
