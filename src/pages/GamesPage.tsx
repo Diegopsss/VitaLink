@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { motion, px } from 'framer-motion'
 import inicioJuegos from '../assets/Images/Backgrounds/inicio_juegos.svg'
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
@@ -20,28 +20,28 @@ function GamesPage() {
     {
       id: 1,
       title: 'Memoria de Animales',
-      color: '#c6ddc7',
+      color: '#3065c9',
       icon: memoriaIcon,
       route: '/memory-game'
     },
     {
       id: 2,
       title: 'Colores Mágicos',
-      color: '#c6ddc7',
+      color: '#3065c9',
       icon: coloresIcon,
       route: '/colors-game'
     },
     {
       id: 3,
       title: 'Ruta Mágica',
-      color: '#c6ddc7',
+      color: '#3065c9',
       icon: rutaIcon,
       route: '/music-game'
     },
     {
       id: 4,
       title: 'Transportes Aventura',
-      color: '#c6ddc7',
+      color: '#3065c9',
       icon: secuenciaIcon,
       route: '/sequence-game'
     }
@@ -95,7 +95,7 @@ function GamesPage() {
           zIndex: 1,
         }}
       >
-        <Link to="/mode-selection" style={{ display: 'block', cursor: 'pointer' }}>
+        <div onClick={() => navigate('/mode-selection')} style={{ display: 'block', cursor: 'pointer' }}>
           <img
             src={returnButton}
             alt="Regresar"
@@ -105,7 +105,7 @@ function GamesPage() {
               pointerEvents: 'none',
             }}
           />
-        </Link>
+        </div>
       </motion.div>
 
       {/* Contenedor de juegos */}
@@ -166,7 +166,7 @@ function GamesPage() {
               animate={{ opacity: 1 }}
               transition={{ delay: index * 0.2 + 0.3, duration: 0.5 }}
               style={{
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.9))',
+                background: 'rgba(174, 237, 248, 0.95)',
                 borderRadius: '12px',
                 padding: '12px 20px',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
