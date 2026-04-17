@@ -36,7 +36,7 @@ function GamesPage() {
       title: 'Ruta Mágica',
       color: '#3065c9',
       icon: rutaIcon,
-      route: '/music-game'
+      route: '/car-game'
     },
     {
       id: 4,
