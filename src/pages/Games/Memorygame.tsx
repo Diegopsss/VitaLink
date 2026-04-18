@@ -23,6 +23,8 @@ import susto1 from '../../assets/Images/iconos_juego/memorama/emociones/susto_1.
 import susto2 from '../../assets/Images/iconos_juego/memorama/emociones/susto_2.png'
 import triste1 from '../../assets/Images/iconos_juego/memorama/emociones/triste_1.png'
 import triste2 from '../../assets/Images/iconos_juego/memorama/emociones/triste_2.png'
+import amor1 from '../../assets/Images/iconos_juego/memorama/emociones/amor_1.png'
+import amor2 from '../../assets/Images/iconos_juego/memorama/emociones/amor_2.png'
 
 import num1_1 from '../../assets/Images/iconos_juego/memorama/numeros/1_1.png'
 import num1_2 from '../../assets/Images/iconos_juego/memorama/numeros/1_2.png'
@@ -57,7 +59,8 @@ const gameSets = {
         { pairId: 'enojo', images: [enojo1, enojo2] },
         { pairId: 'feliz', images: [feliz1, feliz2] },
         { pairId: 'susto', images: [susto1, susto2] },
-        { pairId: 'triste', images: [triste1, triste2] }
+        { pairId: 'triste', images: [triste1, triste2] },
+        { pairId: 'amor', images: [amor1, amor2] }
     ],
     numeros: [
         { pairId: '1', images: [num1_1, num1_2] },
