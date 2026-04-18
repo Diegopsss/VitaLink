@@ -42,9 +42,9 @@ function StoriesPage() {
     },
     {
       id: 4,
-      title: 'La Tortuga Sabia',
+      title: 'La Tortuga y Día Lluvioso',
       icon: tortugaCuento,
-      route: '/cuento/tortuga-sabia'
+      route: '/cuento/tortuga-dia-lluvioso'
     },
     {
       id: 5,

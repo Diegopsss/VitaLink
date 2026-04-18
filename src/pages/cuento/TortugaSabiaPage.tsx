@@ -6,38 +6,58 @@ import returnButton from '../../assets/Images/Buttons/return_button.png'
 import MenuTab from '../../components/MenuTab'
 import '../../styles/App.css'
 
-// Importar imágenes de la tortuga sabia (usar conejo como placeholder)
-import tortuga1 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_1.svg'
-import tortuga2 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_2.svg'
-import tortuga3 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_3.svg'
-import tortuga4 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_4.svg'
-import tortuga5 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_5.svg'
-import tortuga6 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_6.svg'
-import tortuga7 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_7.svg'
-import tortuga8 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_8.svg'
-import tortuga9 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_9.svg'
+// Importar imágenes de la tortuga y día lluvioso en orden
+import tortuga1 from '../../assets/Images/paginas_cuentos/tortuga_y_dia_lluvioso/tor_1.svg'
+import tortuga2 from '../../assets/Images/paginas_cuentos/tortuga_y_dia_lluvioso/tor_2.svg'
+import tortuga3 from '../../assets/Images/paginas_cuentos/tortuga_y_dia_lluvioso/tor_3.svg'
+import tortuga4 from '../../assets/Images/paginas_cuentos/tortuga_y_dia_lluvioso/tor_4.svg'
+import tortuga5 from '../../assets/Images/paginas_cuentos/tortuga_y_dia_lluvioso/tor_5.svg'
+import tortuga6 from '../../assets/Images/paginas_cuentos/tortuga_y_dia_lluvioso/tor_6.svg'
+import tortuga7 from '../../assets/Images/paginas_cuentos/tortuga_y_dia_lluvioso/tor_7.svg'
+import tortuga8 from '../../assets/Images/paginas_cuentos/tortuga_y_dia_lluvioso/tor_8.svg'
+import tortuga9 from '../../assets/Images/paginas_cuentos/tortuga_y_dia_lluvioso/tor_9.svg'
+import tortugaFinal from '../../assets/Images/paginas_cuentos/tortuga_y_dia_lluvioso/la_tortuga_y_dia_lluviosa.svg'
 
 function TortugaSabiaPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState(0)
   const navigate = useNavigate()
 
-  // Array de imágenes en orden (menor a mayor)
+  // Array de imágenes en orden (archivo final al inicio)
   const tortugaImages = [
-    tortuga1, tortuga2, tortuga3, tortuga4, tortuga5,
-    tortuga6, tortuga7, tortuga8, tortuga9
+    tortugaFinal, tortuga1, tortuga2, tortuga3, tortuga4, 
+    tortuga5, tortuga6, tortuga7, tortuga8, tortuga9
   ]
 
-  // Efecto para cambiar imágenes cada 5 segundos
+  // Timer para cambio automático con tiempos diferenciados
   useEffect(() => {
+    // 5 segundos para la imagen de presentación (índice 0), 20 para las demás
+    const timerDuration = currentImage === 0 ? 5000 : 20000
+    
     const timer = setTimeout(() => {
       if (currentImage < tortugaImages.length - 1) {
         setCurrentImage(currentImage + 1)
+      } else {
+        // Si está en la última imagen, redirigir a selección de cuentos
+        navigate('/stories')
       }
-    }, 5000) // 5 segundos por imagen
+    }, timerDuration)
 
     return () => clearTimeout(timer)
-  }, [currentImage])
+  }, [currentImage, navigate])
+
+  // Función para manejar navegación manual (resetear timer)
+  const handleNext = () => {
+    if (currentImage < tortugaImages.length - 1) {
+      setCurrentImage(currentImage + 1)
+    }
+  }
+
+  const handlePrevious = () => {
+    if (currentImage > 0) {
+      setCurrentImage(currentImage - 1)
+    }
+  }
 
   return (
     <div

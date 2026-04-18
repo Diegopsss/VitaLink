@@ -27,7 +27,7 @@ function MenuTab({ isOpen, onClose }: MenuTabProps) {
 
   const handleReturnHome = () => {
     
-    navigate('/login')
+    navigate('/mode-selection')
   }
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
