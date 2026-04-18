@@ -9,7 +9,7 @@ interface MenuTabProps {
 
 function MenuTab({ isOpen, onClose }: MenuTabProps) {
   const [volume, setVolume] = useState(50)
-  const [error, setError] = useState('')
+  const [error] = useState('')
   const navigate = useNavigate()
 
   const handleResumeGame = () => {

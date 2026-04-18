@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion, px } from 'framer-motion'
+import { motion } from 'framer-motion'
 import inicioJuegos from '../assets/Images/Backgrounds/inicio_juegos.svg'
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
 import returnButton from '../assets/Images/Buttons/return_button.png'
@@ -29,7 +29,7 @@ function GamesPage() {
       title: 'Colores Mágicos',
       color: '#3065c9',
       icon: coloresIcon,
-      route: '/'
+      route: '/cup-balls'
     },
     {
       id: 3,
