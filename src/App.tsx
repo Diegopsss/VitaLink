@@ -22,6 +22,7 @@ import PersonasPage from './pages/PersonasPage'
 import TransportePage from './pages/TransportePage'
 import CarGames from './pages/Games/CarGames'
 import NotFoundPage from './pages/NotFoundPage'
+import MemoryGame from './pages/Games/Memorygame'
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
         <Route path="/cuento/mapache-libro" element={<ProtectedRoute><MapacheLibroPage /></ProtectedRoute>} />
         <Route path="/cuento/tortuga-sabia" element={<ProtectedRoute><TortugaSabiaPage /></ProtectedRoute>} />
         <Route path="/cuento/zumo-amigos" element={<ProtectedRoute><ZumoAmigosPage /></ProtectedRoute>} />
+        <Route path = "/memory-game" element={<ProtectedRoute><MemoryGame/></ProtectedRoute>}/>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
