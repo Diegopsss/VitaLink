@@ -137,11 +137,19 @@ function MemoryGame() {
             const secondCard = cards[secondIndex]
 
             if (firstCard.pairId === secondCard.pairId) {
-                setCards(prev => prev.map((card, idx) => 
-                    idx === firstIndex || idx === secondIndex
-                        ? { ...card, isMatched: true }
-                        : card
-                ))
+                setCards(prev => {
+                    const updated = prev.map((card, idx) => 
+                        idx === firstIndex || idx === secondIndex
+                            ? { ...card, isMatched: true }
+                            : card
+                    )
+                    
+                    if (updated.every(card => card.isMatched)) {
+                        setTimeout(() => setGameWon(true), 0)
+                    }
+                    
+                    return updated
+                })
                 setFlippedIndices([])
                 setIsChecking(false)
             } else {
@@ -160,12 +168,10 @@ function MemoryGame() {
 
     useEffect(() => {
         if (cards.length > 0 && cards.every(card => card.isMatched)) {
+            setGameWon(true)
             setTimeout(() => {
-                setGameWon(true)
-                setTimeout(() => {
-                    nextGame()
-                }, 2000)
-            }, 500)
+                nextGame()
+            }, 1200)
         }
     }, [cards])
 
