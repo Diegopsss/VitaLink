@@ -201,8 +201,8 @@ function CarGames() {
                     exit={{ opacity: 0 }}
                     style={{
                         position: 'absolute',
-                        top: '30%',
-                        left: '50%',
+                        top: '200px',
+                        left: '230px',
                         transform: 'translate(-50%, -50%)',
                         fontSize: '150px',
                         zIndex: 25,
@@ -219,9 +219,9 @@ function CarGames() {
                 onClick={() => setIsMenuOpen(true)}
                 style={{
                     position: 'absolute',
-                    bottom: '20px',
-                    left: '20px',
-                    width: '80px',
+                    top: '0px',
+                    left: '0px',
+                    width: '100px',
                     borderRadius: '50%',
                     cursor: 'pointer',
                     zIndex: 999,
@@ -235,17 +235,17 @@ function CarGames() {
                 transition={{ delay: 0.5, duration: 0.5, ease: 'easeOut' }}
                 style={{
                     position: 'absolute',
-                    bottom: '15px',
-                    right: '870px',
+                    top: '60px',
+                    left: '2px',
                     zIndex: 1,
                 }}
             >
-                <div onClick={() => navigate('/mode-selection')} style={{ display: 'block', cursor: 'pointer' }}>
+                <div onClick={() => navigate('/games')} style={{ display: 'block', cursor: 'pointer' }}>
                     <img
                         src={returnButton}
                         alt="Regresar"
                         style={{
-                            width: '80px',
+                            width: '95px',
                             borderRadius: '50%',
                             pointerEvents: 'none',
                         }}

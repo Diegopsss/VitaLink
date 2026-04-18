@@ -3,6 +3,9 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import fondoMemorama from '../../assets/Images/Backgrounds/fondos juegos/fondo_memorama.svg'
 import cartaAtras from '../../assets/Images/iconos_juego/memorama/carta_atras.png'
+import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
+import returnButton from '../../assets/Images/Buttons/return_button.png'
+import MenuTab from '../../components/MenuTab'
 
 import azul1 from '../../assets/Images/iconos_juego/memorama/colores/azul_1.png'
 import azul2 from '../../assets/Images/iconos_juego/memorama/colores/azul_2.png'
@@ -73,6 +76,7 @@ const gameSets = {
 
 function MemoryGame() {
     const navigate = useNavigate()
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [cards, setCards] = useState<Card[]>([])
     const [flippedIndices, setFlippedIndices] = useState<number[]>([])
     const [isChecking, setIsChecking] = useState(false)
@@ -205,6 +209,47 @@ function MemoryGame() {
                 padding: '20px'
             }}
         >
+            {/* Botón sidebar */}
+            <img
+                src={sidebarButton}
+                alt="Sidebar"
+                onClick={() => setIsMenuOpen(true)}
+                style={{
+                    position: 'absolute',
+                    top: '0px',
+                    left: '0px',
+                    width: '100px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    zIndex: 999,
+                }}
+            />
+
+            {/* Botón de return */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.5, ease: 'easeOut' }}
+                style={{
+                    position: 'absolute',
+                    top: '60px',
+                    left: '2px',
+                    zIndex: 1,
+                }}
+            >
+                <div onClick={() => navigate('/games')} style={{ display: 'block', cursor: 'pointer' }}>
+                    <img
+                        src={returnButton}
+                        alt="Regresar"
+                        style={{
+                            width: '95px',
+                            borderRadius: '50%',
+                            pointerEvents: 'none',
+                        }}
+                    />
+                </div>
+            </motion.div>
+
             {gameWon && !allGamesCompleted && (
                 <motion.div
                     initial={{ opacity: 0, scale: 0.3, y: -50 }}
@@ -411,6 +456,9 @@ function MemoryGame() {
                     </motion.div>
                 ))}
             </div>
+
+            {/* Menú pestaña desplegable */}
+            <MenuTab isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         </div>
     )
 }

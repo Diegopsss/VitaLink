@@ -6,6 +6,9 @@ import rojoImg from '../../assets/Images/iconos_juego/Secuencia colores/rojo_sec
 import azulImg from '../../assets/Images/iconos_juego/Secuencia colores/azul_secuencia.png';
 import verdeImg from '../../assets/Images/iconos_juego/Secuencia colores/verde_secuencia.png';
 import amarilloImg from '../../assets/Images/iconos_juego/Secuencia colores/amarillo_secuencia.png';
+import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png';
+import returnButton from '../../assets/Images/Buttons/return_button.png';
+import MenuTab from '../../components/MenuTab';
 
 type ColorId = 'rojo' | 'azul' | 'verde' | 'amarillo';
 
@@ -24,6 +27,7 @@ const colors: ColorButton[] = [
 
 function ColorsGame() {
     const navigate = useNavigate();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [sequence, setSequence] = useState<ColorId[]>([]);
     const [userSequence, setUserSequence] = useState<ColorId[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -140,6 +144,47 @@ function ColorsGame() {
             overflow: 'hidden',
             padding: '20px'
         }}>
+            {/* Botón sidebar */}
+            <img
+                src={sidebarButton}
+                alt="Sidebar"
+                onClick={() => setIsMenuOpen(true)}
+                style={{
+                    position: 'absolute',
+                    top: '0px',
+                    left: '0px',
+                    width: '100px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    zIndex: 999,
+                }}
+            />
+
+            {/* Botón de return */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.5, ease: 'easeOut' }}
+                style={{
+                    position: 'absolute',
+                    top: '60px',
+                    left: '2px',
+                    zIndex: 1,
+                }}
+            >
+                <div onClick={() => navigate('/games')} style={{ display: 'block', cursor: 'pointer' }}>
+                    <img
+                        src={returnButton}
+                        alt="Regresar"
+                        style={{
+                            width: '95px',
+                            borderRadius: '50%',
+                            pointerEvents: 'none',
+                        }}
+                    />
+                </div>
+            </motion.div>
+
             {!gameStarted && !gameOver && (
                 <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -374,6 +419,9 @@ function ColorsGame() {
                     </motion.div>
                 </motion.div>
             )}
+
+            {/* Menú pestaña desplegable */}
+            <MenuTab isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         </div>
     );
 }
