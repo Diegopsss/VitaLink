@@ -55,31 +55,31 @@ function TortugaSabiaPage() {
         overflow: 'hidden',
       }}
     >
-      {/* Botón sidebar */}
+      {/* Botón sidebar - movido abajo */}
       <img
         src={sidebarButton}
         alt="Sidebar"
         onClick={() => setIsMenuOpen(true)}
         style={{
           position: 'absolute',
-          top: '0px',
-          left: '0px',
-          width: '100px',
+          bottom: '20px',
+          left: '20px',
+          width: '80px',
           borderRadius: '50%',
           cursor: 'pointer',
           zIndex: 999,
         }}
       />
 
-      {/* Botón de return */}
+      {/* Botón de return - movido abajo */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.5, ease: 'easeOut' }}
         style={{
           position: 'absolute',
-          top: '60px',
-          left: '2px',
+          bottom: '15px',
+          right: '870px',
           zIndex: 1,
         }}
       >
@@ -88,7 +88,7 @@ function TortugaSabiaPage() {
             src={returnButton}
             alt="Regresar"
             style={{
-              width: '95px',
+              width: '80px',
               borderRadius: '50%',
               pointerEvents: 'none',
             }}
@@ -96,49 +96,68 @@ function TortugaSabiaPage() {
         </div>
       </motion.div>
 
-      {/* Título del cuento */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3, duration: 0.8 }}
+      {/* Flechas de navegación */}
+      <motion.button
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        onClick={handlePrevious}
+        disabled={currentImage === 0}
         style={{
-          textAlign: 'center',
-          background: 'rgba(255, 255, 255, 0.9)',
-          borderRadius: '20px',
-          padding: '30px 40px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+          position: 'absolute',
+          left: '20px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          background: currentImage === 0 ? 'rgba(200, 200, 200, 0.7)' : 'rgba(255, 255, 255, 0.9)',
+          color: currentImage === 0 ? '#999' : '#333',
+          border: 'none',
+          borderRadius: '50%',
+          width: '60px',
+          height: '60px',
+          fontSize: '24px',
+          fontWeight: 'bold',
+          cursor: currentImage === 0 ? 'not-allowed' : 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
           backdropFilter: 'blur(10px)',
-          border: '2px solid rgba(255,255,255,0.3)',
+          zIndex: 100,
         }}
       >
-        <motion.h1
-          initial={{ scale: 0.8 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-          style={{
-            fontSize: '42px',
-            fontWeight: '700',
-            color: '#333333',
-            margin: 0,
-            textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
-          }}
-        >
-          La Tortuga Sabia
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 0.6 }}
-          style={{
-            fontSize: '16px',
-            color: '#666666',
-            margin: '10px 0 0',
-            fontStyle: 'italic',
-          }}
-        >
-          Lecciones de paciencia
-        </motion.p>
-      </motion.div>
+        <span style={{ marginLeft: '-4px' }}>{"<"}</span>
+      </motion.button>
+
+      <motion.button
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        onClick={handleNext}
+        disabled={currentImage === tortugaImages.length - 1}
+        style={{
+          position: 'absolute',
+          right: '20px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          background: currentImage === tortugaImages.length - 1 ? 'rgba(200, 200, 200, 0.7)' : 'rgba(255, 255, 255, 0.9)',
+          color: currentImage === tortugaImages.length - 1 ? '#999' : '#333',
+          border: 'none',
+          borderRadius: '50%',
+          width: '60px',
+          height: '60px',
+          fontSize: '24px',
+          fontWeight: 'bold',
+          cursor: currentImage === tortugaImages.length - 1 ? 'not-allowed' : 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+          backdropFilter: 'blur(10px)',
+          zIndex: 100,
+        }}
+      >
+        <span style={{ marginLeft: '2px' }}>{">"}</span>
+      </motion.button>
 
       {/* Menú pestaña desplegable */}
       <MenuTab isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
