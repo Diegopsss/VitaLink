@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import fondoCarro from '../../assets/Images/Backgrounds/fondos juegos/fondo_carro.svg'
 import cocheJuego from '../../assets/Images/iconos_juego/Carro/coche_juego.png'
@@ -7,6 +8,10 @@ import flechaDerecha from '../../assets/Images/iconos_juego/Carro/flecha_derecha
 import iconoCasa from '../../assets/Images/iconos_juego/Carro/icono_casa.png'
 import iconoParque from '../../assets/Images/iconos_juego/Carro/icono_parque.png'
 import iconoTienda from '../../assets/Images/iconos_juego/Carro/icono_tienda.png'
+import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
+import returnButton from '../../assets/Images/Buttons/return_button.png'
+import MenuTab from '../../components/MenuTab'
+import '../../styles/App.css'
 
 interface Obstacle {
     id: number
@@ -16,6 +21,8 @@ interface Obstacle {
 }
 
 function CarGames() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const navigate = useNavigate()
     const [carPosition, setCarPosition] = useState(0)
     const [isMovingLeft, setIsMovingLeft] = useState(false)
     const [isMovingRight, setIsMovingRight] = useState(false)
@@ -205,6 +212,47 @@ function CarGames() {
                 </motion.div>
             )}
 
+            {/* Botón sidebar */}
+            <img
+                src={sidebarButton}
+                alt="Sidebar"
+                onClick={() => setIsMenuOpen(true)}
+                style={{
+                    position: 'absolute',
+                    bottom: '20px',
+                    left: '20px',
+                    width: '80px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    zIndex: 999,
+                }}
+            />
+
+            {/* Botón de return */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.5, ease: 'easeOut' }}
+                style={{
+                    position: 'absolute',
+                    bottom: '15px',
+                    right: '870px',
+                    zIndex: 1,
+                }}
+            >
+                <div onClick={() => navigate('/mode-selection')} style={{ display: 'block', cursor: 'pointer' }}>
+                    <img
+                        src={returnButton}
+                        alt="Regresar"
+                        style={{
+                            width: '80px',
+                            borderRadius: '50%',
+                            pointerEvents: 'none',
+                        }}
+                    />
+                </div>
+            </motion.div>
+
             {/* Flecha Izquierda */}
             <motion.img
                 src={flechaIzquierda}
@@ -312,6 +360,9 @@ function CarGames() {
                     touchAction: 'none',
                 }}
             />
+
+            {/* Menú pestaña desplegable */}
+            <MenuTab isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         </div>
     )
 }
