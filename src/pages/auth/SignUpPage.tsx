@@ -310,6 +310,7 @@ function SignUpPage() {
               fontSize: '16px',
               fontWeight: '600',
             }}
+            className="signup-input"
           />
         </div>
 
@@ -335,6 +336,7 @@ function SignUpPage() {
               fontSize: '16px',
               fontWeight: '600',
             }}
+            className="signup-input"
           />
         </div>
 
@@ -360,6 +362,7 @@ function SignUpPage() {
               fontSize: '16px',
               fontWeight: '600',
             }}
+            className="signup-input"
           />
         </div>
       </motion.div>
