@@ -137,11 +137,19 @@ function MemoryGame() {
             const secondCard = cards[secondIndex]
 
             if (firstCard.pairId === secondCard.pairId) {
-                setCards(prev => prev.map((card, idx) => 
-                    idx === firstIndex || idx === secondIndex
-                        ? { ...card, isMatched: true }
-                        : card
-                ))
+                setCards(prev => {
+                    const updated = prev.map((card, idx) => 
+                        idx === firstIndex || idx === secondIndex
+                            ? { ...card, isMatched: true }
+                            : card
+                    )
+                    
+                    if (updated.every(card => card.isMatched)) {
+                        setTimeout(() => setGameWon(true), 0)
+                    }
+                    
+                    return updated
+                })
                 setFlippedIndices([])
                 setIsChecking(false)
             } else {
@@ -160,12 +168,10 @@ function MemoryGame() {
 
     useEffect(() => {
         if (cards.length > 0 && cards.every(card => card.isMatched)) {
+            setGameWon(true)
             setTimeout(() => {
-                setGameWon(true)
-                setTimeout(() => {
-                    nextGame()
-                }, 2000)
-            }, 500)
+                nextGame()
+            }, 1200)
         }
     }, [cards])
 
@@ -187,14 +193,16 @@ function MemoryGame() {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
-                minHeight: '100vh',
+                height: '100vh',
                 width: '100%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                position: 'relative',
+                position: 'fixed',
+                top: 0,
+                left: 0,
                 overflow: 'hidden',
-                padding: '40px 20px'
+                padding: '20px'
             }}
         >
             {gameWon && !allGamesCompleted && (
@@ -321,10 +329,11 @@ function MemoryGame() {
                 style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(5, 1fr)',
-                    gap: '15px',
-                    maxWidth: '1000px',
-                    width: '100%',
-                    zIndex: 10
+                    gap: '12px',
+                    maxWidth: '850px',
+                    width: '90%',
+                    zIndex: 10,
+                    margin: '0 auto'
                 }}
             >
                 {cards.map((card, index) => (
