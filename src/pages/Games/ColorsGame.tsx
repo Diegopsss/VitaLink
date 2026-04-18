@@ -1,0 +1,380 @@
+import { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import fondoSecuencia from '../../assets/Images/Backgrounds/fondos juegos/fondo_secuencia.svg';
+import rojoImg from '../../assets/Images/iconos_juego/Secuencia colores/rojo_secuencia.png';
+import azulImg from '../../assets/Images/iconos_juego/Secuencia colores/azul_secuencia.png';
+import verdeImg from '../../assets/Images/iconos_juego/Secuencia colores/verde_secuencia.png';
+import amarilloImg from '../../assets/Images/iconos_juego/Secuencia colores/amarillo_secuencia.png';
+
+type ColorId = 'rojo' | 'azul' | 'verde' | 'amarillo';
+
+interface ColorButton {
+    id: ColorId;
+    image: string;
+    name: string;
+}
+
+const colors: ColorButton[] = [
+    { id: 'rojo', image: rojoImg, name: 'Rojo' },
+    { id: 'azul', image: azulImg, name: 'Azul' },
+    { id: 'verde', image: verdeImg, name: 'Verde' },
+    { id: 'amarillo', image: amarilloImg, name: 'Amarillo' }
+];
+
+function ColorsGame() {
+    const navigate = useNavigate();
+    const [sequence, setSequence] = useState<ColorId[]>([]);
+    const [userSequence, setUserSequence] = useState<ColorId[]>([]);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [, setCurrentStep] = useState(-1);
+    const [gameStarted, setGameStarted] = useState(false);
+    const [gameOver, setGameOver] = useState(false);
+    const [score, setScore] = useState(0);
+    const [highlightedColor, setHighlightedColor] = useState<ColorId | null>(null);
+    const [isWaitingForUser, setIsWaitingForUser] = useState(false);
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const getRandomColor = (): ColorId => {
+        const randomIndex = Math.floor(Math.random() * colors.length);
+        return colors[randomIndex].id;
+    };
+
+    const startNewRound = () => {
+        const newColor = getRandomColor();
+        const newSequence = [...sequence, newColor];
+        setSequence(newSequence);
+        setUserSequence([]);
+        setScore(newSequence.length);
+        playSequence(newSequence);
+    };
+
+    const playSequence = async (seq: ColorId[]) => {
+        setIsPlaying(true);
+        setIsWaitingForUser(false);
+        
+        for (let i = 0; i < seq.length; i++) {
+            await new Promise(resolve => {
+                timeoutRef.current = setTimeout(() => {
+                    setHighlightedColor(seq[i]);
+                    setCurrentStep(i);
+                    resolve(undefined);
+                }, 600);
+            });
+
+            await new Promise(resolve => {
+                timeoutRef.current = setTimeout(() => {
+                    setHighlightedColor(null);
+                    resolve(undefined);
+                }, 600);
+            });
+        }
+
+        setCurrentStep(-1);
+        setIsPlaying(false);
+        setIsWaitingForUser(true);
+    };
+
+    const handleColorClick = (colorId: ColorId) => {
+        if (isPlaying || !isWaitingForUser || gameOver) return;
+
+        const newUserSequence = [...userSequence, colorId];
+        setUserSequence(newUserSequence);
+
+        setHighlightedColor(colorId);
+        setTimeout(() => setHighlightedColor(null), 300);
+
+        const currentIndex = newUserSequence.length - 1;
+        
+        if (newUserSequence[currentIndex] !== sequence[currentIndex]) {
+            setGameOver(true);
+            setIsWaitingForUser(false);
+            return;
+        }
+
+        if (newUserSequence.length === sequence.length) {
+            setIsWaitingForUser(false);
+            setTimeout(() => {
+                startNewRound();
+            }, 1000);
+        }
+    };
+
+    const startGame = () => {
+        setGameStarted(true);
+        setGameOver(false);
+        setSequence([]);
+        setUserSequence([]);
+        setScore(0);
+        setIsWaitingForUser(false);
+        
+        const firstColor = getRandomColor();
+        setSequence([firstColor]);
+        setScore(1);
+        playSequence([firstColor]);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
+
+    return (
+        <div style={{
+            backgroundImage: `url(${fondoSecuencia})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            minHeight: '100vh',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            overflow: 'hidden',
+            padding: '20px'
+        }}>
+            {!gameStarted && !gameOver && (
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '30px'
+                    }}
+                >
+                    <div style={{
+                        fontSize: '48px',
+                        fontWeight: 'bold',
+                        color: '#FFFFFF',
+                        textShadow: '4px 4px 8px rgba(0,0,0,0.8)',
+                        textAlign: 'center'
+                    }}>
+                        Juego de Secuencias
+                    </div>
+                    <motion.button
+                        onClick={startGame}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        style={{
+                            padding: '20px 60px',
+                            fontSize: '32px',
+                            fontWeight: 'bold',
+                            color: '#FFFFFF',
+                            backgroundColor: '#4CAF50',
+                            border: 'none',
+                            borderRadius: '20px',
+                            cursor: 'pointer',
+                            boxShadow: '0 8px 16px rgba(0,0,0,0.3)'
+                        }}
+                    >
+                        Comenzar
+                    </motion.button>
+                </motion.div>
+            )}
+
+            {gameStarted && !gameOver && (
+                <>
+                    <div style={{
+                        position: 'absolute',
+                        top: '40px',
+                        fontSize: '36px',
+                        fontWeight: 'bold',
+                        color: '#FFFFFF',
+                        textShadow: '3px 3px 6px rgba(0,0,0,0.8)',
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        padding: '15px 30px',
+                        borderRadius: '15px'
+                    }}>
+                        Nivel: {score}
+                    </div>
+
+                    {isPlaying && (
+                        <div style={{
+                            position: 'absolute',
+                            bottom: '80px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            fontSize: '28px',
+                            fontWeight: 'bold',
+                            color: '#FFD700',
+                            textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                            backgroundColor: 'rgba(0,0,0,0.6)',
+                            padding: '10px 25px',
+                            borderRadius: '10px',
+                            whiteSpace: 'nowrap'
+                        }}>
+                            ¡Observa la secuencia!
+                        </div>
+                    )}
+
+                    {isWaitingForUser && (
+                        <div style={{
+                            position: 'absolute',
+                            bottom: '80px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            fontSize: '28px',
+                            fontWeight: 'bold',
+                            color: '#00FF00',
+                            textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                            backgroundColor: 'rgba(0,0,0,0.6)',
+                            padding: '10px 25px',
+                            borderRadius: '10px',
+                            whiteSpace: 'nowrap'
+                        }}>
+                            ¡Tu turno!
+                        </div>
+                    )}
+
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(2, 1fr)',
+                        gap: '20px',
+                        maxWidth: '350px',
+                        width: 'auto'
+                    }}>
+                        {colors.map((color) => (
+                            <motion.div
+                                key={color.id}
+                                onClick={() => handleColorClick(color.id)}
+                                animate={{
+                                    scale: highlightedColor === color.id ? 1.2 : 1,
+                                    filter: highlightedColor === color.id 
+                                        ? 'brightness(1.5) drop-shadow(0 0 20px rgba(255,255,255,0.9))' 
+                                        : 'brightness(1)'
+                                }}
+                                transition={{ duration: 0.2 }}
+                                whileHover={!isPlaying && isWaitingForUser ? { scale: 1.1 } : {}}
+                                whileTap={!isPlaying && isWaitingForUser ? { scale: 0.9 } : {}}
+                                style={{
+                                    cursor: isPlaying || !isWaitingForUser ? 'default' : 'pointer',
+                                    width: '150px',
+                                    height: '150px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <img
+                                    src={color.image}
+                                    alt={color.name}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'contain'
+                                    }}
+                                />
+                            </motion.div>
+                        ))}
+                    </div>
+                </>
+            )}
+
+            {gameOver && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 100
+                    }}
+                >
+                    <motion.div
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        style={{
+                            backgroundColor: '#FFFFFF',
+                            borderRadius: '30px',
+                            padding: '60px 80px',
+                            textAlign: 'center',
+                            boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+                            maxWidth: '600px'
+                        }}
+                    >
+                        <div style={{
+                            fontSize: '64px',
+                            fontWeight: 'bold',
+                            color: '#FF5722',
+                            marginBottom: '20px',
+                            textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
+                        }}>
+                            ¡Fin del Juego!
+                        </div>
+                        <div style={{
+                            fontSize: '32px',
+                            color: '#333',
+                            marginBottom: '15px'
+                        }}>
+                            Nivel alcanzado: {score}
+                        </div>
+                        <div style={{
+                            fontSize: '24px',
+                            color: '#666',
+                            marginBottom: '40px'
+                        }}>
+                            ¡Buen intento!
+                        </div>
+                        <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
+                            <motion.button
+                                onClick={startGame}
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                                style={{
+                                    padding: '20px 40px',
+                                    fontSize: '24px',
+                                    fontWeight: 'bold',
+                                    color: '#FFFFFF',
+                                    backgroundColor: '#4CAF50',
+                                    border: 'none',
+                                    borderRadius: '15px',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
+                                }}
+                            >
+                                Jugar de Nuevo
+                            </motion.button>
+                            <motion.button
+                                onClick={() => navigate('/games')}
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                                style={{
+                                    padding: '20px 40px',
+                                    fontSize: '24px',
+                                    fontWeight: 'bold',
+                                    color: '#FFFFFF',
+                                    backgroundColor: '#2196F3',
+                                    border: 'none',
+                                    borderRadius: '15px',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
+                                }}
+                            >
+                                Volver a Juegos
+                            </motion.button>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </div>
+    );
+}
+
+export default ColorsGame;
