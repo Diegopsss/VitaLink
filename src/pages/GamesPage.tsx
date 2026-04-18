@@ -29,7 +29,7 @@ function GamesPage() {
       title: 'Colores Mágicos',
       color: '#3065c9',
       icon: coloresIcon,
-      route: '/colors-game'
+      route: '/'
     },
     {
       id: 3,
@@ -43,7 +43,7 @@ function GamesPage() {
       title: 'Transportes Aventura',
       color: '#3065c9',
       icon: secuenciaIcon,
-      route: '/sequence-game'
+      route: '/colors-game'
     }
   ]
 

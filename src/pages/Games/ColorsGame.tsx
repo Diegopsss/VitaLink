@@ -302,49 +302,50 @@ function ColorsGame() {
                         transition={{ delay: 0.2 }}
                         style={{
                             backgroundColor: '#FFFFFF',
-                            borderRadius: '30px',
-                            padding: '60px 80px',
+                            borderRadius: '40px',
+                            padding: '80px 120px',
                             textAlign: 'center',
                             boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-                            maxWidth: '600px'
+                            maxWidth: '800px',
+                            minWidth: '600px'
                         }}
                     >
                         <div style={{
-                            fontSize: '64px',
+                            fontSize: '72px',
                             fontWeight: 'bold',
                             color: '#FF5722',
-                            marginBottom: '20px',
+                            marginBottom: '50px',
                             textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
                         }}>
                             ¡Fin del Juego!
                         </div>
                         <div style={{
-                            fontSize: '32px',
+                            fontSize: '40px',
                             color: '#333',
-                            marginBottom: '15px'
+                            marginBottom: '30px'
                         }}>
                             Nivel alcanzado: {score}
                         </div>
                         <div style={{
-                            fontSize: '24px',
+                            fontSize: '28px',
                             color: '#666',
-                            marginBottom: '40px'
+                            marginBottom: '50px'
                         }}>
                             ¡Buen intento!
                         </div>
-                        <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
+                        <div style={{ display: 'flex', gap: '30px', justifyContent: 'center' }}>
                             <motion.button
                                 onClick={startGame}
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.95 }}
                                 style={{
-                                    padding: '20px 40px',
-                                    fontSize: '24px',
+                                    padding: '25px 50px',
+                                    fontSize: '28px',
                                     fontWeight: 'bold',
                                     color: '#FFFFFF',
                                     backgroundColor: '#4CAF50',
                                     border: 'none',
-                                    borderRadius: '15px',
+                                    borderRadius: '20px',
                                     cursor: 'pointer',
                                     boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
                                 }}
@@ -356,13 +357,13 @@ function ColorsGame() {
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.95 }}
                                 style={{
-                                    padding: '20px 40px',
-                                    fontSize: '24px',
+                                    padding: '25px 50px',
+                                    fontSize: '28px',
                                     fontWeight: 'bold',
                                     color: '#FFFFFF',
                                     backgroundColor: '#2196F3',
                                     border: 'none',
-                                    borderRadius: '15px',
+                                    borderRadius: '20px',
                                     cursor: 'pointer',
                                     boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
                                 }}
