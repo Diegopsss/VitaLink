@@ -17,20 +17,24 @@ import mapache7 from '../../assets/Images/paginas_cuentos/el_mapache_y_su_libro_
 import mapache8 from '../../assets/Images/paginas_cuentos/el_mapache_y_su_libro_magico/map_8.svg'
 import mapache9 from '../../assets/Images/paginas_cuentos/el_mapache_y_su_libro_magico/map_9.svg'
 import mapache10 from '../../assets/Images/paginas_cuentos/el_mapache_y_su_libro_magico/map_10.svg'
+import mapacheFinal from '../../assets/Images/paginas_cuentos/el_mapache_y_su_libro_magico/mapache_y_libro_magico.svg'
 
 function MapacheLibroPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState(0)
   const navigate = useNavigate()
 
-  // Array de imágenes en orden (menor a mayor)
+  // Array de imágenes en orden (archivo final al inicio)
   const mapacheImages = [
-    mapache1, mapache2, mapache3, mapache4, mapache5,
-    mapache6, mapache7, mapache8, mapache9, mapache10
+    mapacheFinal, mapache1, mapache2, mapache3, mapache4, 
+    mapache5, mapache6, mapache7, mapache8, mapache9, mapache10
   ]
 
-  // Timer para cambio automático después de 20 segundos de inactividad
+  // Timer para cambio automático con tiempos diferenciados
   useEffect(() => {
+    // 5 segundos para la imagen de presentación (índice 0), 20 para las demás
+    const timerDuration = currentImage === 0 ? 5000 : 20000
+    
     const timer = setTimeout(() => {
       if (currentImage < mapacheImages.length - 1) {
         setCurrentImage(currentImage + 1)
@@ -38,7 +42,7 @@ function MapacheLibroPage() {
         // Si está en la última imagen, redirigir a selección de cuentos
         navigate('/stories')
       }
-    }, 20000) // 20 segundos
+    }, timerDuration)
 
     return () => clearTimeout(timer)
   }, [currentImage, navigate])

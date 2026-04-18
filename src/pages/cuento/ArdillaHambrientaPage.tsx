@@ -16,20 +16,24 @@ import ardilla6 from '../../assets/Images/paginas_cuentos/ardilla_hambrienta/ard
 import ardilla7 from '../../assets/Images/paginas_cuentos/ardilla_hambrienta/ard_7.svg'
 import ardilla8 from '../../assets/Images/paginas_cuentos/ardilla_hambrienta/ard_8.svg'
 import ardilla9 from '../../assets/Images/paginas_cuentos/ardilla_hambrienta/ard_9.svg'
+import ardillaFinal from '../../assets/Images/paginas_cuentos/ardilla_hambrienta/ardilla_hambrienta.svg'
 
 function ArdillaHambrientaPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState(0)
   const navigate = useNavigate()
 
-  // Array de imágenes en orden (menor a mayor)
+  // Array de imágenes en orden (archivo final al inicio)
   const ardillaImages = [
-    ardilla1, ardilla2, ardilla3, ardilla4, ardilla5,
-    ardilla6, ardilla7, ardilla8, ardilla9
+    ardillaFinal, ardilla1, ardilla2, ardilla3, ardilla4, 
+    ardilla5, ardilla6, ardilla7, ardilla8, ardilla9
   ]
 
-  // Timer para cambio automático después de 20 segundos de inactividad
+  // Timer para cambio automático con tiempos diferenciados
   useEffect(() => {
+    // 5 segundos para la imagen de presentación (índice 0), 20 para las demás
+    const timerDuration = currentImage === 0 ? 5000 : 20000
+    
     const timer = setTimeout(() => {
       if (currentImage < ardillaImages.length - 1) {
         setCurrentImage(currentImage + 1)
@@ -37,7 +41,7 @@ function ArdillaHambrientaPage() {
         // Si está en la última imagen, redirigir a selección de cuentos
         navigate('/stories')
       }
-    }, 20000) // 20 segundos
+    }, timerDuration)
 
     return () => clearTimeout(timer)
   }, [currentImage, navigate])

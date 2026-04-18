@@ -16,20 +16,24 @@ import conejo6 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_6.sv
 import conejo7 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_7.svg'
 import conejo8 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_8.svg'
 import conejo9 from '../../assets/Images/paginas_cuentos/conejo_perdido/con_9.svg'
+import conejoFinal from '../../assets/Images/paginas_cuentos/conejo_perdido/conejo_perdido.svg'
 
 function ConejoPerdidoPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState(0)
   const navigate = useNavigate()
 
-  // Array de imágenes en orden (menor a mayor)
+  // Array de imágenes en orden (archivo final al inicio)
   const conejoImages = [
-    conejo1, conejo2, conejo3, conejo4, conejo5,
-    conejo6, conejo7, conejo8, conejo9
+    conejoFinal, conejo1, conejo2, conejo3, conejo4, 
+    conejo5, conejo6, conejo7, conejo8, conejo9
   ]
 
-  // Timer para cambio automático después de 20 segundos de inactividad
+  // Timer para cambio automático con tiempos diferenciados
   useEffect(() => {
+    // 5 segundos para la imagen de presentación (índice 0), 20 para las demás
+    const timerDuration = currentImage === 0 ? 5000 : 20000
+    
     const timer = setTimeout(() => {
       if (currentImage < conejoImages.length - 1) {
         setCurrentImage(currentImage + 1)
@@ -37,7 +41,7 @@ function ConejoPerdidoPage() {
         // Si está en la última imagen, redirigir a selección de cuentos
         navigate('/stories')
       }
-    }, 20000) // 20 segundos
+    }, timerDuration)
 
     return () => clearTimeout(timer)
   }, [currentImage, navigate])
