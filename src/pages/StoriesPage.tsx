@@ -214,19 +214,42 @@ function StoriesPage() {
             }}
           >
             {cuentos.slice(2, 5).map((cuento, index) => (
-              <motion.img
+              <motion.div
                 key={cuento.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: (index + 2) * 0.2 + 0.1, duration: 0.5 }}
-                src={cuento.icon}
-                alt={cuento.title}
-                style={{
-                  width: '220px',
-                  height: '220px',
-                  filter: 'drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3))',
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ 
+                  delay: (index + 2) * 0.2, 
+                  duration: 0.6, 
+                  ease: 'easeOut' 
                 }}
-              />
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.2)'
+                }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleCuentoClick(cuento.route)}
+                style={{
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <motion.img
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: (index + 2) * 0.2 + 0.1, duration: 0.5 }}
+                  src={cuento.icon}
+                  alt={cuento.title}
+                  style={{
+                    width: '220px',
+                    height: '220px',
+                    filter: 'drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3))',
+                  }}
+                />
+              </motion.div>
             ))}
           </motion.div>
         </div>
