@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useBackgroundMusic } from '../../contexts/BackgroundMusicContext'
 import fondoGeneral from '../../assets/Images/Backgrounds/fondo_general.svg'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import palabrasButton from '../../assets/Images/Buttons/palabras_button.png'
@@ -16,6 +17,9 @@ import '../../styles/App.css'
 function ModeSelectionPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
+  
+  // Acceder a la música de fondo global
+  useBackgroundMusic()
 
   // Reproducir audio 'diapositiva 7' al cargar la página
   useEffect(() => {

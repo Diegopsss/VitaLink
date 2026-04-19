@@ -25,11 +25,13 @@ import NotFoundPage from './pages/NotFoundPage'
 import MemoryGame from './pages/Games/Memorygame'
 import ColorsGame from './pages/Games/ColorsGame'
 import CupBalls from './pages/Games/CupBalls'
+import { BackgroundMusicProvider } from './contexts/BackgroundMusicContext'
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <BackgroundMusicProvider>
+      <BrowserRouter>
+        <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
@@ -57,6 +59,7 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
+    </BackgroundMusicProvider>
   )
 }
 

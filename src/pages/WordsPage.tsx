@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
+import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import fondoGeneral from '../assets/Images/Backgrounds/fondo_general.svg'
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
 import returnButton from '../assets/Images/Buttons/return_button.png'
@@ -23,6 +24,9 @@ import transporteAudio from '../assets/Audios/palabras/words/transporte_diaposit
 function WordsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
+  
+  // Acceder a la música de fondo global
+  useBackgroundMusic()
 
   // Reproducir secuencia de audios: palabras -> frase_palabras
   useEffect(() => {

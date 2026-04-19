@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import inicioJuegos from '../assets/Images/Backgrounds/inicio_juegos.svg'
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
 import returnButton from '../assets/Images/Buttons/return_button.png'
@@ -14,33 +15,36 @@ import '../styles/App.css'
 function GamesPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
+  
+  // Acceder a la música de fondo global
+  useBackgroundMusic()
 
   // Datos de los 4 juegos posibles
   const games = [
     {
       id: 1,
-      title: 'Memoria de Animales',
+      title: 'Encuentra la pareja',
       color: '#3065c9',
       icon: memoriaIcon,
       route: '/memory-game'
     },
     {
       id: 2,
-      title: 'Colores Mágicos',
+      title: 'Colores a su lugar',
       color: '#3065c9',
       icon: coloresIcon,
       route: '/cup-balls'
     },
     {
       id: 3,
-      title: 'Ruta Mágica',
+      title: 'Viaje a toda velocidad',
       color: '#3065c9',
       icon: rutaIcon,
       route: '/car-game'
     },
     {
       id: 4,
-      title: 'Transportes Aventura',
+      title: 'Secuencia de colores',
       color: '#3065c9',
       icon: secuenciaIcon,
       route: '/colors-game'

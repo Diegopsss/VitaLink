@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Link, useNavigate } from 'react-router-dom'
+import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import baseAprender from '../assets/Images/Backgrounds/base_aprender.svg'
 import fondoGeneral from '../assets/Images/Backgrounds/fondo_general.svg'
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
@@ -31,6 +32,9 @@ function PersonasPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [canTransitionToBaby, setCanTransitionToBaby] = useState(false)
   const [canTransitionToGrandparents, setCanTransitionToGrandparents] = useState(false)
+  
+  // Acceder a la música de fondo global
+  useBackgroundMusic()
   const [isAnimatingAbuela, setIsAnimatingAbuela] = useState(false)
   const [isAnimatingAbuelo, setIsAnimatingAbuelo] = useState(false)
   const [isAnimatingMama, setIsAnimatingMama] = useState(false)
