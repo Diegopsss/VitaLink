@@ -33,6 +33,7 @@ function CupBalls() {
     
     const cup1Ref = useRef<HTMLDivElement>(null);
     const cup2Ref = useRef<HTMLDivElement>(null);
+    const gameAreaRef = useRef<HTMLDivElement>(null);
 
     const initializeLevel = () => {
         const newBalls: Ball[] = [];
@@ -265,7 +266,9 @@ function CupBalls() {
                         Nivel: {currentLevel}
                     </div>
 
-                    <div style={{
+                    <div 
+                        ref={gameAreaRef}
+                        style={{
                         display: 'flex',
                         gap: '150px',
                         alignItems: 'flex-end',
@@ -315,7 +318,9 @@ function CupBalls() {
                                         <motion.div
                                             key={ball.id}
                                             drag
+                                            dragConstraints={gameAreaRef}
                                             dragElastic={0.1}
+                                            dragMomentum={false}
                                             onDragStart={() => setDraggedBall(ball.id)}
                                             onDrag={(_, info) => handleDrag(ball.id, info)}
                                             onDragEnd={(_, info) => handleDragEnd(ball.id, info)}
@@ -399,7 +404,9 @@ function CupBalls() {
                                         <motion.div
                                             key={ball.id}
                                             drag
+                                            dragConstraints={gameAreaRef}
                                             dragElastic={0.1}
+                                            dragMomentum={false}
                                             onDragStart={() => setDraggedBall(ball.id)}
                                             onDrag={(_, info) => handleDrag(ball.id, info)}
                                             onDragEnd={(_, info) => handleDragEnd(ball.id, info)}
