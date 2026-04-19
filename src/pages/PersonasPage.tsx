@@ -31,6 +31,10 @@ function PersonasPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [canTransitionToBaby, setCanTransitionToBaby] = useState(false)
   const [canTransitionToGrandparents, setCanTransitionToGrandparents] = useState(false)
+  const [isAnimatingAbuela, setIsAnimatingAbuela] = useState(false)
+  const [isAnimatingAbuelo, setIsAnimatingAbuelo] = useState(false)
+  const [isAnimatingMama, setIsAnimatingMama] = useState(false)
+  const [isAnimatingPapa, setIsAnimatingPapa] = useState(false)
 
   // Función para reproducir audios específicos de familia
   const handleFamilyClick = (personName: string) => {
@@ -83,9 +87,37 @@ function PersonasPage() {
               console.log('Error reproduciendo audio ellos son papás:', error)
             })
             
-            // Habilitar transición a baby cuando termine el audio
+            // Después de ellos son papás, reproducir audio mamá y animar
             audio2.addEventListener('ended', () => {
-              setCanTransitionToBaby(true)
+              setTimeout(() => {
+                const audio3 = new Audio(mamaAudio)
+                audio3.play().catch(error => {
+                  console.log('Error reproduciendo audio mamá:', error)
+                })
+                
+                // Animar mamá
+                setIsAnimatingMama(true)
+                setTimeout(() => setIsAnimatingMama(false), 2000)
+                
+                // Después de mamá, reproducir audio papá y animar
+                audio3.addEventListener('ended', () => {
+                  setTimeout(() => {
+                    const audio4 = new Audio(papaAudio)
+                    audio4.play().catch(error => {
+                      console.log('Error reproduciendo audio papá:', error)
+                    })
+                    
+                    // Animar papá
+                    setIsAnimatingPapa(true)
+                    setTimeout(() => setIsAnimatingPapa(false), 2000)
+                    
+                    // Después de papá, habilitar transición a baby
+                    audio4.addEventListener('ended', () => {
+                      setCanTransitionToBaby(true)
+                    })
+                  }, 1000)
+                })
+              }, 1000)
             })
           }, 1000)
         })
@@ -122,9 +154,37 @@ function PersonasPage() {
               console.log('Error reproduciendo audio ellos son los abuelos:', error)
             })
             
-            // Habilitar transición a family cuando termine el audio
+            // Después de ellos son los abuelos, reproducir audio abuela y animar
             audio2.addEventListener('ended', () => {
-              setCanTransitionToGrandparents(true)
+              setTimeout(() => {
+                const audio3 = new Audio(abuelaAudio)
+                audio3.play().catch(error => {
+                  console.log('Error reproduciendo audio abuela:', error)
+                })
+                
+                // Animar abuela
+                setIsAnimatingAbuela(true)
+                setTimeout(() => setIsAnimatingAbuela(false), 2000)
+                
+                // Después de abuela, reproducir audio abuelo y animar
+                audio3.addEventListener('ended', () => {
+                  setTimeout(() => {
+                    const audio4 = new Audio(abueloAudio)
+                    audio4.play().catch(error => {
+                      console.log('Error reproduciendo audio abuelo:', error)
+                    })
+                    
+                    // Animar abuelo
+                    setIsAnimatingAbuelo(true)
+                    setTimeout(() => setIsAnimatingAbuelo(false), 2000)
+                    
+                    // Después de abuelo, habilitar transición a family
+                    audio4.addEventListener('ended', () => {
+                      setCanTransitionToGrandparents(true)
+                    })
+                  }, 1000)
+                })
+              }, 1000)
             })
           }, 1000)
         })
@@ -264,6 +324,15 @@ function PersonasPage() {
               src={papa}
               alt="Papá"
               whileHover={{ scale: 1.1 }}
+              animate={isAnimatingPapa ? {
+                scale: [1, 1.2, 1],
+                rotate: [0, -10, 10, 0],
+                x: [0, -20, 20, 0],
+              } : {}}
+              transition={{
+                duration: 2,
+                ease: 'easeInOut'
+              }}
               style={{ width: '100%', height: '100%' }}
             />
           </motion.div>
@@ -287,6 +356,15 @@ function PersonasPage() {
               src={mama}
               alt="Mamá"
               whileHover={{ scale: 1.1 }}
+              animate={isAnimatingMama ? {
+                scale: [1, 1.2, 1],
+                rotate: [0, 10, -10, 0],
+                x: [0, 20, -20, 0],
+              } : {}}
+              transition={{
+                duration: 2,
+                ease: 'easeInOut'
+              }}
               style={{ width: '100%', height: '100%' }}
             />
           </motion.div>
@@ -340,6 +418,15 @@ function PersonasPage() {
               src={abuelo}
               alt="Abuelo"
               whileHover={{ scale: 1.1 }}
+              animate={isAnimatingAbuelo ? {
+                scale: [1, 1.2, 1],
+                rotate: [0, -15, 15, 0],
+                y: [0, -15, 0],
+              } : {}}
+              transition={{
+                duration: 2,
+                ease: 'easeInOut'
+              }}
               style={{ width: '100%', height: '100%' }}
             />
           </motion.div>
@@ -363,6 +450,15 @@ function PersonasPage() {
               src={abuela}
               alt="Abuela"
               whileHover={{ scale: 1.1 }}
+              animate={isAnimatingAbuela ? {
+                scale: [1, 1.2, 1],
+                rotate: [0, 15, -15, 0],
+                y: [0, -15, 0],
+              } : {}}
+              transition={{
+                duration: 2,
+                ease: 'easeInOut'
+              }}
               style={{ width: '100%', height: '100%' }}
             />
           </motion.div>

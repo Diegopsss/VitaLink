@@ -12,6 +12,7 @@ import seleccionPersonas from '../assets/Images/Iconos_palabras/seleccion_person
 import seleccionTransporte from '../assets/Images/Iconos_palabras/seleccion_transporte.png'
 import MenuTab from '../components/MenuTab'
 import frasePalabrasAudio from '../assets/Audios/palabras/words/frase_palabras diapositiva 8.m4a'
+import palabrasAudio from '../assets/Audios/presentacion/mode-selection/palabras_presentación.m4a'
 import animalesAudio from '../assets/Audios/palabras/words/animales_diapositiva 8.m4a'
 import coloresAudio from '../assets/Audios/palabras/words/colores_diapositiva 8.m4a'
 import comidaAudio from '../assets/Audios/palabras/words/comida_diapositiva 8.m4a'
@@ -23,13 +24,26 @@ function WordsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
 
-  // Reproducir audio 'frase_palabras' después de 0.5 segundos
+  // Reproducir secuencia de audios: palabras -> frase_palabras
   useEffect(() => {
     const timer = setTimeout(() => {
-      const audio = new Audio(frasePalabrasAudio)
-      audio.play().catch(error => {
-        console.log('Error reproduciendo audio frase palabras:', error)
+      // Reproducir audio 'palabras' primero
+      const audio1 = new Audio(palabrasAudio)
+      audio1.play().catch(error => {
+        console.log('Error reproduciendo audio palabras:', error)
       })
+      
+      // Cuando termine 'palabras', reproducir 'frase_palabras'
+      audio1.addEventListener('ended', () => {
+        const audio2 = new Audio(frasePalabrasAudio)
+        audio2.play().catch(error => {
+          console.log('Error reproduciendo audio frase palabras:', error)
+        })
+      })
+
+      return () => {
+        audio1.removeEventListener('ended', () => {})
+      }
     }, 500)
 
     return () => clearTimeout(timer)

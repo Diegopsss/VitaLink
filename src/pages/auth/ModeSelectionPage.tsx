@@ -43,12 +43,8 @@ function ModeSelectionPage() {
     navigate('/stories')
   }
 
-  // Función para reproducir audio de palabras
+  // Función para navegar a palabras sin audio
   const handlePalabrasClick = () => {
-    const audio = new Audio(palabrasAudio)
-    audio.play().catch(error => {
-      console.log('Error reproduciendo audio palabras:', error)
-    })
     navigate('/words')
   }
   return (
