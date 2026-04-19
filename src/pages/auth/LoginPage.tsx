@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import fondoGeneral from '../../assets/Images/Backgrounds/fondo_general.svg'
@@ -10,6 +10,8 @@ import continueButton from '../../assets/Images/Buttons/continue_button.png'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import { supabase } from '../../utils/supabase'
 import MenuTab from '../../components/MenuTab'
+import quienJugaraAudio from '../../assets/Audios/presentacion/login/quien jugará el día de hoy_presentacion.m4a'
+import ingresaFolioAudio from '../../assets/Audios/presentacion/login/ingresa el folio_presentación.m4a'
 import '../../styles/App.css'
 
 function LoginPage() {
@@ -18,6 +20,41 @@ function LoginPage() {
   const [error, setError] = useState('')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  // Efecto para reproducir audios al cargar la página
+  useEffect(() => {
+    // Crear elemento de audio
+    const audio = new Audio()
+    audioRef.current = audio
+
+    // Reproducir primer audio "quien jugara"
+    audio.src = quienJugaraAudio
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio quien jugara:', error)
+    })
+
+    // Evento cuando termina el primer audio
+    const handleFirstAudioEnd = () => {
+      // Reproducir segundo audio "ingresa el folio" solo una vez
+      audio.src = ingresaFolioAudio
+      audio.play().catch(error => {
+        console.log('Error reproduciendo audio ingresa folio:', error)
+      })
+      
+      // Remover el event listener después de reproducir el segundo audio
+      audio.removeEventListener('ended', handleFirstAudioEnd)
+    }
+
+    audio.addEventListener('ended', handleFirstAudioEnd)
+
+    // Cleanup
+    return () => {
+      audio.removeEventListener('ended', handleFirstAudioEnd)
+      audio.pause()
+      audio.src = ''
+    }
+  }, [])
 
   const handleLogin = async () => {
     if (!search.trim()) return

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import fondoGeneral from '../../assets/Images/Backgrounds/fondo_general.svg'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
@@ -7,10 +7,50 @@ import palabrasButton from '../../assets/Images/Buttons/palabras_button.png'
 import juegosButton from '../../assets/Images/Buttons/juegos_button.png'
 import cuentosButton from '../../assets/Images/Buttons/cuentos_button.png'
 import MenuTab from '../../components/MenuTab'
+import diapositiva7Audio from '../../assets/Audios/presentacion/mode-selection/diapositiva 7_ presentación.m4a'
+import juegosAudio from '../../assets/Audios/presentacion/mode-selection/juegos_presentación.m4a'
+import cuentosAudio from '../../assets/Audios/presentacion/mode-selection/cuentos_presentación.m4a'
+import palabrasAudio from '../../assets/Audios/presentacion/mode-selection/palabras_presentación.m4a'
 import '../../styles/App.css'
 
 function ModeSelectionPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const navigate = useNavigate()
+
+  // Reproducir audio 'diapositiva 7' al cargar la página
+  useEffect(() => {
+    const audio = new Audio(diapositiva7Audio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio diapositiva 7:', error)
+    })
+  }, [])
+
+  // Función para reproducir audio de juegos
+  const handleJuegosClick = () => {
+    const audio = new Audio(juegosAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio juegos:', error)
+    })
+    navigate('/games')
+  }
+
+  // Función para reproducir audio de cuentos
+  const handleCuentosClick = () => {
+    const audio = new Audio(cuentosAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio cuentos:', error)
+    })
+    navigate('/stories')
+  }
+
+  // Función para reproducir audio de palabras
+  const handlePalabrasClick = () => {
+    const audio = new Audio(palabrasAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio palabras:', error)
+    })
+    navigate('/words')
+  }
   return (
     <div
       style={{
@@ -61,7 +101,7 @@ function ModeSelectionPage() {
           zIndex: 1,
         }}
       >
-          <Link to="/words" style={{ display: 'block', cursor: 'pointer' }}>
+          <Link to="/words" style={{ display: 'block', cursor: 'pointer' }} onClick={handlePalabrasClick}>
             <img
               src={palabrasButton}
               alt="Palabras"
@@ -80,7 +120,7 @@ function ModeSelectionPage() {
             />
           </Link>
           
-          <Link to="/games" style={{ display: 'block', cursor: 'pointer' }}>
+          <Link to="/games" style={{ display: 'block', cursor: 'pointer' }} onClick={handleJuegosClick}>
             <img
               src={juegosButton}
               alt="Juegos"
@@ -99,7 +139,7 @@ function ModeSelectionPage() {
             />
           </Link>
           
-          <Link to="/stories" style={{ display: 'block', cursor: 'pointer' }}>
+          <Link to="/stories" style={{ display: 'block', cursor: 'pointer' }} onClick={handleCuentosClick}>
             <img
               src={cuentosButton}
               alt="Cuentos"

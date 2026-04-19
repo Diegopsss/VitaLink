@@ -11,18 +11,73 @@ import avion from '../assets/Images/iconos_transportes/avion.png'
 import carro from '../assets/Images/iconos_transportes/carro.png'
 import tren from '../assets/Images/iconos_transportes/tren.png'
 import MenuTab from '../components/MenuTab'
+import fraseDiapositiva21Audio from '../assets/Audios/palabras/transportes/frase_diapositiva 21.m4a'
+import fraseDiapositiva22Audio from '../assets/Audios/palabras/transportes/frase_diapositiva 22.m4a'
+import ambulanciaAudio from '../assets/Audios/palabras/transportes/ambulancia_transporte.m4a'
+import avionAudio from '../assets/Audios/palabras/transportes/avion_transporte.m4a'
+import carroAudio from '../assets/Audios/palabras/transportes/carro_transporte.m4a'
+import trenAudio from '../assets/Audios/palabras/transportes/tren_transporte.m4a'
 
 function TransportePage() {
   const [currentView, setCurrentView] = useState<'initial' | 'transportElements'>('initial')
   const [clickedTransport, setClickedTransport] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCurrentView('transportElements')
-    }, 7000)
+  // Funciones para reproducir audios específicos de transporte
+  const handleTransportClick = (transportName: string) => {
+    let audioFile: string
+    
+    switch (transportName) {
+      case 'Ambulancia':
+        audioFile = ambulanciaAudio
+        break
+      case 'Avion':
+        audioFile = avionAudio
+        break
+      case 'Carro':
+        audioFile = carroAudio
+        break
+      case 'Tren':
+        audioFile = trenAudio
+        break
+      default:
+        return
+    }
+    
+    const audio = new Audio(audioFile)
+    audio.play().catch(error => {
+      console.log(`Error reproduciendo audio ${transportName}:`, error)
+    })
+  }
 
-    return () => clearTimeout(timer)
+  useEffect(() => {
+    // Esperar 2 segundos para que termine el audio de transporte
+    setTimeout(() => {
+      // Reproducir audio 'frase_diapositiva 21' antes del cambio de página
+      const audio1 = new Audio(fraseDiapositiva21Audio)
+      audio1.play().catch(error => {
+        console.log('Error reproduciendo audio frase diapositiva 21:', error)
+      })
+      
+      // Cambiar a vista de transporte cuando termine el audio
+      audio1.addEventListener('ended', () => {
+        setCurrentView('transportElements')
+        
+        // Reproducir audio 'frase_diapositiva 22' después del cambio de página
+        setTimeout(() => {
+          const audio2 = new Audio(fraseDiapositiva22Audio)
+          audio2.play().catch(error => {
+            console.log('Error reproduciendo audio frase diapositiva 22:', error)
+          })
+        }, 1000)
+      })
+
+      return () => {
+        audio1.removeEventListener('ended', () => {})
+      }
+    }, 2000) // Esperar 2 segundos para que sea perceptible
+
+    return () => {}
   }, [])
 
   useEffect(() => {
@@ -151,7 +206,10 @@ function TransportePage() {
                 cursor: 'pointer',
                 zIndex: 1,
               }}
-              onClick={() => setClickedTransport(element.name)}
+              onClick={() => {
+                setClickedTransport(element.name)
+                handleTransportClick(element.name)
+              }}
             >
               <motion.img
                 src={element.image}

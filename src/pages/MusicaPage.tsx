@@ -12,18 +12,77 @@ import maracas from '../assets/Images/iconos_musica/maracas.png'
 import tambor from '../assets/Images/iconos_musica/tambor.png'
 import trompeta from '../assets/Images/iconos_musica/trompeta.png'
 import MenuTab from '../components/MenuTab'
+import fraseDiapositiva23Audio from '../assets/Audios/palabras/musica/frase_diapositiva 23.m4a'
+import fraseDiapositiva24Audio from '../assets/Audios/palabras/musica/frase_diapositiva 24.m4a'
+import aplausosAudio from '../assets/Audios/palabras/musica/aplausos_música.m4a'
+import guitarraAudio from '../assets/Audios/palabras/musica/guitarra_musica.m4a'
+import maracasAudio from '../assets/Audios/palabras/musica/maracas_musica.m4a'
+import tamborAudio from '../assets/Audios/palabras/musica/tambor_musica.m4a'
+import trompetaAudio from '../assets/Audios/palabras/musica/trompeta_musica.m4a'
 
 function MusicaPage() {
   const [currentView, setCurrentView] = useState<'initial' | 'musicElements'>('initial')
   const [clickedMusic, setClickedMusic] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCurrentView('musicElements')
-    }, 7000)
+  // Funciones para reproducir audios específicos de música
+  const handleMusicClick = (musicName: string) => {
+    let audioFile: string
+    
+    switch (musicName) {
+      case 'Aplauso':
+        audioFile = aplausosAudio
+        break
+      case 'Guitarra':
+        audioFile = guitarraAudio
+        break
+      case 'Maracas':
+        audioFile = maracasAudio
+        break
+      case 'Tambor':
+        audioFile = tamborAudio
+        break
+      case 'Trompeta':
+        audioFile = trompetaAudio
+        break
+      default:
+        return
+    }
+    
+    const audio = new Audio(audioFile)
+    audio.play().catch(error => {
+      console.log(`Error reproduciendo audio ${musicName}:`, error)
+    })
+  }
 
-    return () => clearTimeout(timer)
+  useEffect(() => {
+    // Esperar 2 segundos para que termine el audio de música
+    setTimeout(() => {
+      // Reproducir audio 'frase_diapositiva 23' antes del cambio de página
+      const audio1 = new Audio(fraseDiapositiva23Audio)
+      audio1.play().catch(error => {
+        console.log('Error reproduciendo audio frase diapositiva 23:', error)
+      })
+      
+      // Cambiar a vista de música cuando termine el audio
+      audio1.addEventListener('ended', () => {
+        setCurrentView('musicElements')
+        
+        // Reproducir audio 'frase_diapositiva 24' después del cambio de página
+        setTimeout(() => {
+          const audio2 = new Audio(fraseDiapositiva24Audio)
+          audio2.play().catch(error => {
+            console.log('Error reproduciendo audio frase diapositiva 24:', error)
+          })
+        }, 1000)
+      })
+
+      return () => {
+        audio1.removeEventListener('ended', () => {})
+      }
+    }, 2000) // Esperar 2 segundos para que sea perceptible
+
+    return () => {}
   }, [])
 
   useEffect(() => {
@@ -152,7 +211,10 @@ function MusicaPage() {
                 cursor: 'pointer',
                 zIndex: 1,
               }}
-              onClick={() => setClickedMusic(element.name)}
+              onClick={() => {
+                setClickedMusic(element.name)
+                handleMusicClick(element.name)
+              }}
             >
               <motion.img
                 src={element.image}

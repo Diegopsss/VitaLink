@@ -12,39 +12,146 @@ import bebe from '../assets/Images/iconos_personas/bebe.png'
 import abuelo from '../assets/Images/iconos_personas/abuelo.png'
 import abuela from '../assets/Images/iconos_personas/abuela.png'
 import MenuTab from '../components/MenuTab'
+import fraseDiapositiva13Audio from '../assets/Audios/palabras/familia/frase_diapositiva 13.m4a'
+import mamaPapaAudio from '../assets/Audios/palabras/familia/mamá y papá_ familia.m4a'
+import mamaAudio from '../assets/Audios/palabras/familia/mamá_familia.m4a'
+import papaAudio from '../assets/Audios/palabras/familia/papá_familia.m4a'
+import bebeAudio from '../assets/Audios/palabras/familia/bebé_familia.m4a'
+import abueloAudio from '../assets/Audios/palabras/familia/abuelo_familia.m4a'
+import abuelaAudio from '../assets/Audios/palabras/familia/abuela_familia.m4a'
+import abuelaAbueloAudio from '../assets/Audios/palabras/familia/abuela y abuelo_familia.m4a'
+import ellosSonPapasAudio from '../assets/Audios/palabras/familia/ellos son papás_familia.m4a'
+import ellosSonAbuelosAudio from '../assets/Audios/palabras/familia/ellos son abuelos_familia.m4a'
+import todosFamiliaAudio from '../assets/Audios/palabras/familia/todos familia_familia.m4a'
+import extraBebeAudio from '../assets/Audios/palabras/familia/extra bebé_familia.m4a'
 
 function PersonasPage() {
   const [currentView, setCurrentView] = useState<'initial' | 'parents' | 'baby' | 'grandparents' | 'family'>('initial')
   const [clickedPerson, setClickedPerson] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [canTransitionToBaby, setCanTransitionToBaby] = useState(false)
+  const [canTransitionToGrandparents, setCanTransitionToGrandparents] = useState(false)
+
+  // Función para reproducir audios específicos de familia
+  const handleFamilyClick = (personName: string) => {
+    let audioFile: string
+    
+    switch (personName) {
+      case 'Bebe':
+        audioFile = bebeAudio
+        break
+      case 'Mama':
+        audioFile = mamaAudio
+        break
+      case 'Papa':
+        audioFile = papaAudio
+        break
+      case 'Abuela':
+        audioFile = abuelaAudio
+        break
+      case 'Abuelo':
+        audioFile = abueloAudio
+        break
+      default:
+        return
+    }
+    
+    const audio = new Audio(audioFile)
+    audio.play().catch(error => {
+      console.log(`Error reproduciendo audio ${personName}:`, error)
+    })
+  }
 
   useEffect(() => {
     if (currentView === 'initial') {
+      // Esperar 2 segundos para el audio existente
       const timer = setTimeout(() => {
-        setCurrentView('parents')
+        // Reproducir audio 'frase_diapositiva 13'
+        const audio = new Audio(fraseDiapositiva13Audio)
+        audio.play().catch(error => {
+          console.log('Error reproduciendo audio frase diapositiva 13:', error)
+        })
+        
+        // Cambiar a vista de padres cuando termine el audio
+        audio.addEventListener('ended', () => {
+          setCurrentView('parents')
+          
+          // Reproducir audio 'ellos son papás' cuando salgan los dos papas juntos
+          setTimeout(() => {
+            const audio2 = new Audio(ellosSonPapasAudio)
+            audio2.play().catch(error => {
+              console.log('Error reproduciendo audio ellos son papás:', error)
+            })
+            
+            // Habilitar transición a baby cuando termine el audio
+            audio2.addEventListener('ended', () => {
+              setCanTransitionToBaby(true)
+            })
+          }, 1000)
+        })
       }, 2000)
 
       return () => clearTimeout(timer)
     } else if (currentView === 'parents') {
-      const timer = setTimeout(() => {
-        setCurrentView('baby')
-      }, 2000)
+      // Solo cambiar a baby cuando el audio mamá y papá haya terminado
+      if (canTransitionToBaby) {
+        const timer = setTimeout(() => {
+          setCurrentView('baby')
+          setCanTransitionToBaby(false) // Resetear el estado
+        }, 1000)
 
-      return () => clearTimeout(timer)
+        return () => clearTimeout(timer)
+      }
+      return () => {}
     } else if (currentView === 'baby') {
+      // Reproducir audio 'extra bebé' cuando entre a la vista baby
       const timer = setTimeout(() => {
-        setCurrentView('grandparents')
-      }, 2000)
+        const audio = new Audio(extraBebeAudio)
+        audio.play().catch(error => {
+          console.log('Error reproduciendo audio extra bebé:', error)
+        })
+        
+        // Cambiar a vista de abuelos cuando termine el audio
+        audio.addEventListener('ended', () => {
+          setCurrentView('grandparents')
+          
+          // Reproducir audio 'ellos son los abuelos' cuando salgan los abuelos juntos
+          setTimeout(() => {
+            const audio2 = new Audio(ellosSonAbuelosAudio)
+            audio2.play().catch(error => {
+              console.log('Error reproduciendo audio ellos son los abuelos:', error)
+            })
+            
+            // Habilitar transición a family cuando termine el audio
+            audio2.addEventListener('ended', () => {
+              setCanTransitionToGrandparents(true)
+            })
+          }, 1000)
+        })
+      }, 1000)
 
       return () => clearTimeout(timer)
     } else if (currentView === 'grandparents') {
-      const timer = setTimeout(() => {
-        setCurrentView('family')
-      }, 2000)
+      // Solo cambiar a family cuando el audio abuela y abuelo haya terminado
+      if (canTransitionToGrandparents) {
+        const timer = setTimeout(() => {
+          setCurrentView('family')
+          setCanTransitionToGrandparents(false) // Resetear el estado
+          
+          // Reproducir audio 'todos familia' cuando entre a la vista family
+          setTimeout(() => {
+            const audio = new Audio(todosFamiliaAudio)
+            audio.play().catch(error => {
+              console.log('Error reproduciendo audio todos familia:', error)
+            })
+          }, 1000)
+        }, 1000)
 
-      return () => clearTimeout(timer)
+        return () => clearTimeout(timer)
+      }
+      return () => {}
     }
-  }, [currentView])
+  }, [currentView, canTransitionToBaby, canTransitionToGrandparents])
 
   useEffect(() => {
     if (clickedPerson) {
@@ -279,7 +386,10 @@ function PersonasPage() {
               cursor: 'pointer',
               zIndex: 1,
             }}
-            onClick={() => setClickedPerson('Papa')}
+            onClick={() => {
+              setClickedPerson('Papa')
+              handleFamilyClick('Papa')
+            }}
           >
             <motion.img
               src={papa}
@@ -319,7 +429,10 @@ function PersonasPage() {
               cursor: 'pointer',
               zIndex: 1,
             }}
-            onClick={() => setClickedPerson('Mama')}
+            onClick={() => {
+              setClickedPerson('Mama')
+              handleFamilyClick('Mama')
+            }}
           >
             <motion.img
               src={mama}
@@ -359,7 +472,10 @@ function PersonasPage() {
               cursor: 'pointer',
               zIndex: 1,
             }}
-            onClick={() => setClickedPerson('Bebe')}
+            onClick={() => {
+              setClickedPerson('Bebe')
+              handleFamilyClick('Bebe')
+            }}
           >
             <motion.img
               src={bebe}
@@ -399,7 +515,10 @@ function PersonasPage() {
               cursor: 'pointer',
               zIndex: 1,
             }}
-            onClick={() => setClickedPerson('Abuelo')}
+            onClick={() => {
+              setClickedPerson('Abuelo')
+              handleFamilyClick('Abuelo')
+            }}
           >
             <motion.img
               src={abuelo}
@@ -439,7 +558,10 @@ function PersonasPage() {
               cursor: 'pointer',
               zIndex: 1,
             }}
-            onClick={() => setClickedPerson('Abuela')}
+            onClick={() => {
+              setClickedPerson('Abuela')
+              handleFamilyClick('Abuela')
+            }}
           >
             <motion.img
               src={abuela}

@@ -1,14 +1,28 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import fondoGeneral from '../../assets/Images/Backgrounds/fondo_general.svg'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import avatares from '../../assets/Images/Buttons/avatares.png'
 import MenuTab from '../../components/MenuTab'
+import avatarSelectionAudio from '../../assets/Audios/presentacion/avatar-selection/elije tu personaje_presentacion.m4a'
 import '../../styles/App.css'
 
 function AvatarSelectionPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const navigate = useNavigate()
+
+  const handleAvatarClick = () => {
+    navigate('/login')
+  }
+
+  // Efecto para reproducir audio al cargar la página
+  useEffect(() => {
+    const audio = new Audio(avatarSelectionAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio avatar selection:', error)
+    })
+  }, [])
   return (
     <div
       style={{
@@ -62,7 +76,7 @@ function AvatarSelectionPage() {
         Elige tu personaje
       </motion.h1>
 
-      {/* Imagen de avatares que lleva a siguiente página */}
+      {/* Imagen de avatares que lleva a login */}
       <motion.div
         initial={{ opacity: 0, scale: .9}}
         animate={{ opacity: 1, scale: 1.2 }}
@@ -75,7 +89,7 @@ function AvatarSelectionPage() {
           zIndex: 1,
         }}
       >
-        <Link to="/character-presentation" style={{ display: 'block', cursor: 'pointer' }}>
+        <div onClick={handleAvatarClick} style={{ display: 'block', cursor: 'pointer' }}>
           <img
             src={avatares}
             alt="Seleccionar Avatar"
@@ -94,7 +108,7 @@ function AvatarSelectionPage() {
               e.currentTarget.style.transform = 'scale(1)'
             }}
           />
-        </Link>
+        </div>
       </motion.div>
       
       {/* Menú pestaña desplegable */}

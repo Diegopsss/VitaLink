@@ -13,6 +13,14 @@ import oveja from '../assets/Images/Buttons/oveja.png'
 import perro from '../assets/Images/Buttons/perro.png'
 import vaca from '../assets/Images/Buttons/vaca.png'
 import MenuTab from '../components/MenuTab'
+import fraseDiapositiva11Audio from '../assets/Audios/palabras/animales/frase_diapositiva 11.m4a'
+import caballoAudio from '../assets/Audios/palabras/animales/caballo_animales.m4a'
+import gallinaAudio from '../assets/Audios/palabras/animales/gallina_animales.m4a'
+import gatoAudio from '../assets/Audios/palabras/animales/gato_animales.m4a'
+import ovejaAudio from '../assets/Audios/palabras/animales/oveja_animales.m4a'
+import perroAudio from '../assets/Audios/palabras/animales/perro_animales.m4a'
+import vacaAudio from '../assets/Audios/palabras/animales/vaca_animales.m4a'
+import hazClicAudio from '../assets/Audios/palabras/animales/haz clic_animales.m4a'
 
 function AnimalesPage() {
   const [currentView, setCurrentView] = useState<'initial' | 'animalButtons'>('initial')
@@ -20,11 +28,33 @@ function AnimalesPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setCurrentView('animalButtons')
-    }, 7000)
+    // Esperar a que termine el audio de animales (3 segundos de retraso)
+    setTimeout(() => {
+      // Reproducir audio 'frase_diapositiva 11' antes del cambio de página
+      const audio1 = new Audio(fraseDiapositiva11Audio)
+      audio1.play().catch(error => {
+        console.log('Error reproduciendo audio frase diapositiva 11:', error)
+      })
+      
+      // Cambiar a vista de animales cuando termine el audio
+      audio1.addEventListener('ended', () => {
+        setCurrentView('animalButtons')
+        
+        // Reproducir audio 'haz clic_animales' después del cambio de página
+        setTimeout(() => {
+          const audio2 = new Audio(hazClicAudio)
+          audio2.play().catch(error => {
+            console.log('Error reproduciendo audio haz clic animales:', error)
+          })
+        }, 1000)
+      })
 
-    return () => clearTimeout(timer)
+      return () => {
+        audio1.removeEventListener('ended', () => {})
+      }
+    }, 2000) // Esperar 2 segundos para que sea perceptible
+
+    return () => {}
   }, [])
 
   useEffect(() => {
@@ -46,6 +76,39 @@ function AnimalesPage() {
     { top: '300px', left: '600px' },
     { top: '300px', left: '65px' }
   ]
+
+  // Funciones para reproducir audios específicos de animales
+  const handleAnimalClick = (animalName: string) => {
+    let audioFile: string
+    
+    switch (animalName) {
+      case 'Caballo':
+        audioFile = caballoAudio
+        break
+      case 'Gallo':
+        audioFile = gallinaAudio
+        break
+      case 'Gato':
+        audioFile = gatoAudio
+        break
+      case 'Oveja':
+        audioFile = ovejaAudio
+        break
+      case 'Perro':
+        audioFile = perroAudio
+        break
+      case 'Vaca':
+        audioFile = vacaAudio
+        break
+      default:
+        return
+    }
+    
+    const audio = new Audio(audioFile)
+    audio.play().catch(error => {
+      console.log(`Error reproduciendo audio ${animalName}:`, error)
+    })
+  }
 
   const animals = [
     { name: 'Caballo', image: caballo },
@@ -155,7 +218,10 @@ function AnimalesPage() {
                 cursor: 'pointer',
                 zIndex: 1,
               }}
-              onClick={() => setClickedAnimal(animal.name)}
+              onClick={() => {
+                setClickedAnimal(animal.name)
+                handleAnimalClick(animal.name)
+              }}
             >
               <motion.img
                 src={animal.image}

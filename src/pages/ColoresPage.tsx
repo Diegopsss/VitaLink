@@ -10,17 +10,64 @@ import yellowButton from '../assets/Images/Buttons/yellow_button.png'
 import redButton from '../assets/Images/Buttons/red_button.png'
 import azulButton from '../assets/Images/Buttons/azul_button.png'
 import MenuTab from '../components/MenuTab'
+import fraseDiapositiva9Audio from '../assets/Audios/palabras/colores/frase_diapositiva 9.m4a'
+import amarilloAudio from '../assets/Audios/palabras/colores/amarillo_palabras.m4a'
+import azulAudio from '../assets/Audios/palabras/colores/azul_palabras.m4a'
+import rojoAudio from '../assets/Audios/palabras/colores/rojo_palabras.m4a'
+import verdeAudio from '../assets/Audios/palabras/colores/verde_palabras.m4a'
+import hazClicColoresAudio from '../assets/Audios/palabras/animales/haz clic_animales.m4a'
 
 function ColoresPage() {
   const [currentView, setCurrentView] = useState<'initial' | 'colorButtons'>('initial')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCurrentView('colorButtons')
-    }, 7000)
+  // Funciones para reproducir audios específicos de colores
+  const handleColorClick = (colorName: string) => {
+    let audioFile: string
+    
+    switch (colorName) {
+      case 'Verde':
+        audioFile = verdeAudio
+        break
+      case 'Amarillo':
+        audioFile = amarilloAudio
+        break
+      case 'Rojo':
+        audioFile = rojoAudio
+        break
+      case 'Azul':
+        audioFile = azulAudio
+        break
+      default:
+        return
+    }
+    
+    const audio = new Audio(audioFile)
+    audio.play().catch(error => {
+      console.log(`Error reproduciendo audio ${colorName}:`, error)
+    })
+  }
 
-    return () => clearTimeout(timer)
+  useEffect(() => {
+    // Esperar a que termine el audio de colores (3 segundos de retraso)
+    setTimeout(() => {
+      // Reproducir audio 'frase_diapositiva 9' antes del cambio de página
+      const audio1 = new Audio(fraseDiapositiva9Audio)
+      audio1.play().catch(error => {
+        console.log('Error reproduciendo audio frase diapositiva 9:', error)
+      })
+      
+      // Cambiar a vista de colores cuando termine el audio
+      audio1.addEventListener('ended', () => {
+        setCurrentView('colorButtons')
+      })
+
+      return () => {
+        audio1.removeEventListener('ended', () => {})
+      }
+    }, 1000) // Esperar 1 segundo para reducir el tiempo de espera
+
+    return () => {}
   }, [])
 
   return (
@@ -133,6 +180,7 @@ function ColoresPage() {
               justifyContent: 'center',
               cursor: 'pointer',
             }}
+            onClick={() => handleColorClick('Verde')}
           >
             <img
               src={verdeButton}
@@ -161,6 +209,7 @@ function ColoresPage() {
               justifyContent: 'center',
               cursor: 'pointer',
             }}
+            onClick={() => handleColorClick('Amarillo')}
           >
             <img
               src={yellowButton}
@@ -190,6 +239,7 @@ function ColoresPage() {
               justifyContent: 'center',
               cursor: 'pointer',
             }}
+            onClick={() => handleColorClick('Rojo')}
           >
             <img
               src={redButton}
@@ -218,6 +268,7 @@ function ColoresPage() {
               justifyContent: 'center',
               cursor: 'pointer',
             }}
+            onClick={() => handleColorClick('Azul')}
           >
             <img
               src={azulButton}

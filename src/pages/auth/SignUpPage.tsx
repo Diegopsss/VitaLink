@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import fondoGeneral from '../../assets/Images/Backgrounds/fondo_general.svg'
@@ -9,6 +9,7 @@ import returnButton from '../../assets/Images/Buttons/return_button.png'
 import continueButton from '../../assets/Images/Buttons/continue_button.png'
 import { supabase } from '../../utils/supabase'
 import MenuTab from '../../components/MenuTab'
+import signupAudio from '../../assets/Audios/presentacion/signup/nuevo usuario_presentación.m4a'
 import '../../styles/App.css'
 
 function SignUpPage() {
@@ -23,6 +24,14 @@ function SignUpPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [registeredFolio, setRegisteredFolio] = useState('')
   const navigate = useNavigate()
+
+  // Efecto para reproducir audio al cargar la página
+  useEffect(() => {
+    const audio = new Audio(signupAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio signup:', error)
+    })
+  }, [])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -198,7 +207,7 @@ function SignUpPage() {
               Folio <strong>{registeredFolio}</strong> registrado
             </p>
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/avatar-selection')}
               style={{
                 padding: '12px 32px',
                 borderRadius: '12px',
@@ -210,7 +219,7 @@ function SignUpPage() {
                 cursor: 'pointer',
               }}
             >
-              Continuar
+              Elegir Avatar
             </button>
           </div>
         </motion.div>

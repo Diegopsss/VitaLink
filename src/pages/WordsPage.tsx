@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import fondoGeneral from '../assets/Images/Backgrounds/fondo_general.svg'
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
 import returnButton from '../assets/Images/Buttons/return_button.png'
@@ -11,9 +11,83 @@ import seleccionMusica from '../assets/Images/Iconos_palabras/seleccion_musica.p
 import seleccionPersonas from '../assets/Images/Iconos_palabras/seleccion_personas.png'
 import seleccionTransporte from '../assets/Images/Iconos_palabras/seleccion_transporte.png'
 import MenuTab from '../components/MenuTab'
+import frasePalabrasAudio from '../assets/Audios/palabras/words/frase_palabras diapositiva 8.m4a'
+import animalesAudio from '../assets/Audios/palabras/words/animales_diapositiva 8.m4a'
+import coloresAudio from '../assets/Audios/palabras/words/colores_diapositiva 8.m4a'
+import comidaAudio from '../assets/Audios/palabras/words/comida_diapositiva 8.m4a'
+import familiaAudio from '../assets/Audios/palabras/words/familia_diapositiva 8.m4a'
+import musicaAudio from '../assets/Audios/palabras/words/música_diapositiva 8.m4a'
+import transporteAudio from '../assets/Audios/palabras/words/transporte_diapositiva 8.m4a'
 
 function WordsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const navigate = useNavigate()
+
+  // Reproducir audio 'frase_palabras' después de 0.5 segundos
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const audio = new Audio(frasePalabrasAudio)
+      audio.play().catch(error => {
+        console.log('Error reproduciendo audio frase palabras:', error)
+      })
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Función para reproducir audio de animales
+  const handleAnimalesClick = () => {
+    const audio = new Audio(animalesAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio animales:', error)
+    })
+    navigate('/animales')
+  }
+
+  // Función para reproducir audio de colores
+  const handleColoresClick = () => {
+    const audio = new Audio(coloresAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio colores:', error)
+    })
+    navigate('/colores')
+  }
+
+  // Función para reproducir audio de comida
+  const handleComidaClick = () => {
+    const audio = new Audio(comidaAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio comida:', error)
+    })
+    navigate('/comida')
+  }
+
+  // Función para reproducir audio de música
+  const handleMusicaClick = () => {
+    const audio = new Audio(musicaAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio música:', error)
+    })
+    navigate('/musica')
+  }
+
+  // Función para reproducir audio de personas
+  const handlePersonasClick = () => {
+    const audio = new Audio(familiaAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio personas:', error)
+    })
+    navigate('/personas')
+  }
+
+  // Función para reproducir audio de transporte
+  const handleTransporteClick = () => {
+    const audio = new Audio(transporteAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio transporte:', error)
+    })
+    navigate('/transporte')
+  }
   return (
     <div
       style={{
@@ -75,7 +149,7 @@ function WordsPage() {
             cursor: 'pointer',
           }}
         >
-          <Link to="/animales" style={{ display: 'block' }}>
+          <Link to="/animales" style={{ display: 'block' }} onClick={handleAnimalesClick}>
             <img
               src={seleccionAnimales}
               alt="Animales"
@@ -106,7 +180,7 @@ function WordsPage() {
             cursor: 'pointer',
           }}
         >
-          <Link to="/colores" style={{ display: 'block' }}>
+          <Link to="/colores" style={{ display: 'block' }} onClick={handleColoresClick}>
             <img
               src={seleccionColores}
               alt="Colores"
@@ -137,7 +211,7 @@ function WordsPage() {
             cursor: 'pointer',
           }}
         >
-          <Link to="/comida" style={{ display: 'block' }}>
+          <Link to="/comida" style={{ display: 'block' }} onClick={handleComidaClick}>
             <img
               src={seleccionComida}
               alt="Comida"
@@ -169,7 +243,7 @@ function WordsPage() {
             cursor: 'pointer',
           }}
         >
-          <Link to="/musica" style={{ display: 'block' }}>
+          <Link to="/musica" style={{ display: 'block' }} onClick={handleMusicaClick}>
             <img
               src={seleccionMusica}
               alt="Música"
@@ -200,7 +274,7 @@ function WordsPage() {
             cursor: 'pointer',
           }}
         >
-          <Link to="/personas" style={{ display: 'block' }}>
+          <Link to="/personas" style={{ display: 'block' }} onClick={handlePersonasClick}>
             <img
               src={seleccionPersonas}
               alt="Personas"
@@ -231,7 +305,7 @@ function WordsPage() {
             cursor: 'pointer',
           }}
         >
-          <Link to="/transporte" style={{ display: 'block' }}>
+          <Link to="/transporte" style={{ display: 'block' }} onClick={handleTransporteClick}>
             <img
               src={seleccionTransporte}
               alt="Transporte"

@@ -8,6 +8,8 @@ import texto6Globo from '../../assets/Images/Texts/texto_6_globo.png'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import continueButton from '../../assets/Images/Buttons/continue_button.png'
 import MenuTab from '../../components/MenuTab'
+import holaNuevoAmigoAudio from '../../assets/Audios/presentacion/character-presentation/Hola nuevo amigo_presentación.m4a'
+import comencemosAudio from '../../assets/Audios/presentacion/character-presentation/comencemos_presentación.m4a'
 import '../../styles/App.css'
 
 function CharacterPresentationPage() {
@@ -15,16 +17,34 @@ function CharacterPresentationPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Reproducir primer audio "hola nuevo amigo" al cargar
+    const audio1 = new Audio(holaNuevoAmigoAudio)
+    audio1.play().catch(error => {
+      console.log('Error reproduciendo audio hola nuevo amigo:', error)
+    })
+
+    // Esperar a que termine el primer audio antes de cambiar el texto
+    const handleFirstAudioEnd = () => {
       setCurrentText('transition')
+      
+      // Reproducir segundo audio "comencemos" inmediatamente
+      const audio2 = new Audio(comencemosAudio)
+      audio2.play().catch(error => {
+        console.log('Error reproduciendo audio comencemos:', error)
+      })
       
       // Después de la transición, mostrar el texto final
       setTimeout(() => {
         setCurrentText('final')
       }, 1000)
-    }, 5000)
+    }
 
-    return () => clearTimeout(timer)
+    // Agregar event listener para cuando termine el primer audio
+    audio1.addEventListener('ended', handleFirstAudioEnd)
+
+    return () => {
+      audio1.removeEventListener('ended', handleFirstAudioEnd)
+    }
   }, [])
 
   return (
@@ -69,8 +89,8 @@ function CharacterPresentationPage() {
           alt="Texto 5.1"
           initial={{ x: -500, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
-          exit={{ x: -500, opacity: 0 }}
+          transition={{ duration: 2.2, ease: 'easeOut' }}
+          exit={{ x: -500, opacity: 0, transition: { duration: 1 } }}
           style={{
             position: 'absolute',
             bottom: '100px',
@@ -89,8 +109,8 @@ function CharacterPresentationPage() {
           alt="Texto 5.2"
           initial={{ x: 500, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
-          exit={{ x: 500, opacity: 0 }}
+          transition={{ duration: 2.2, ease: 'easeOut' }}
+          exit={{ x: 500, opacity: 0, transition: { duration: 1 } }}
           style={{
             position: 'absolute',
             bottom: '100px',
@@ -126,7 +146,7 @@ function CharacterPresentationPage() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 0.5, ease: 'easeOut' }}
+        transition={{ delay: 7, duration: 1, ease: 'easeOut' }}
         style={{
           position: 'absolute',
           bottom: '10px',

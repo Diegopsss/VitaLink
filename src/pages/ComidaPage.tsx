@@ -12,18 +12,80 @@ import manzana from '../assets/Images/comida_iconos/manzana.png'
 import vaso from '../assets/Images/comida_iconos/vaso.png'
 import biberon from '../assets/Images/comida_iconos/biberon.png'
 import MenuTab from '../components/MenuTab'
+import fraseDiapositiva18Audio from '../assets/Audios/palabras/comida/frase_ diapositiva 18.m4a'
+import fraseDiapositiva19Audio from '../assets/Audios/palabras/comida/frase_diapositiva 19.m4a'
+import aguaAudio from '../assets/Audios/palabras/comida/agua_comida.m4a'
+import galletaAudio from '../assets/Audios/palabras/comida/galleta_comida.m4a'
+import lecheAudio from '../assets/Audios/palabras/comida/leche_comida.m4a'
+import manzanaAudio from '../assets/Audios/palabras/comida/manzana_comida.m4a'
+import platanoAudio from '../assets/Audios/palabras/comida/plátano_comida.m4a'
 
 function ComidaPage() {
-  const [currentView, setCurrentView] = useState<'initial' | 'foodDisplay'>('initial')
+  const [currentView, setCurrentView] = useState<'initial' | 'emptyPlate' | 'foodDisplay'>('initial')
   const [clickedItem, setClickedItem] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCurrentView('foodDisplay')
-    }, 7000)
+  // Funciones para reproducir audios específicos de comida
+  const handleFoodClick = (foodName: string) => {
+    let audioFile: string
+    
+    switch (foodName) {
+      case 'Plátano':
+        audioFile = platanoAudio
+        break
+      case 'Galleta':
+        audioFile = galletaAudio
+        break
+      case 'Manzana':
+        audioFile = manzanaAudio
+        break
+      case 'Agua':
+        audioFile = aguaAudio
+        break
+      case 'Leche':
+        audioFile = lecheAudio
+        break
+      default:
+        return
+    }
+    
+    const audio = new Audio(audioFile)
+    audio.play().catch(error => {
+      console.log(`Error reproduciendo audio ${foodName}:`, error)
+    })
+  }
 
-    return () => clearTimeout(timer)
+  useEffect(() => {
+    // Esperar 1 segundo para reducir el tiempo de espera
+    setTimeout(() => {
+      // Reproducir audio 'frase_diapositiva 18' antes del cambio de página
+      const audio1 = new Audio(fraseDiapositiva18Audio)
+      audio1.play().catch(error => {
+        console.log('Error reproduciendo audio frase diapositiva 18:', error)
+      })
+      
+      // Cambiar a vista de plato vacío cuando termine el audio 18
+      audio1.addEventListener('ended', () => {
+        setCurrentView('emptyPlate')
+        
+        // Reproducir audio 'frase_diapositiva 19' con el plato vacío
+        const audio2 = new Audio(fraseDiapositiva19Audio)
+        audio2.play().catch(error => {
+          console.log('Error reproduciendo audio frase diapositiva 19:', error)
+        })
+        
+        // Mostrar comida cuando termine el audio 19
+        audio2.addEventListener('ended', () => {
+          setCurrentView('foodDisplay')
+        })
+      })
+
+      return () => {
+        audio1.removeEventListener('ended', () => {})
+      }
+    }, 1000) // Reducir a 1 segundo
+
+    return () => {}
   }, [])
 
   useEffect(() => {
@@ -42,7 +104,7 @@ function ComidaPage() {
     <div
       style={{
         backgroundImage: currentView === 'initial' ? `url(${baseAprender})` : 'none',
-        backgroundColor: currentView === 'foodDisplay' ? '#7CB342' : 'transparent',
+        backgroundColor: (currentView === 'emptyPlate' || currentView === 'foodDisplay') ? '#7CB342' : 'transparent',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -118,6 +180,25 @@ function ComidaPage() {
         />
       )}
 
+      {/* Plato vacío - solo en vista de plato vacío */}
+      {currentView === 'emptyPlate' && (
+        <motion.img
+          src={plato}
+          alt="Plato Vacío"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          style={{
+            position: 'absolute',
+            top: '150px',
+            left: '362px',
+            width: '300px',
+            pointerEvents: 'none',
+            zIndex: 1,
+          }}
+        />
+      )}
+
       {/* Plato y comida - solo en vista de comida */}
       {currentView === 'foodDisplay' && (
         <>
@@ -152,7 +233,10 @@ function ComidaPage() {
               cursor: 'pointer',
               zIndex: 2,
             }}
-            onClick={() => setClickedItem('Paltano')}
+            onClick={() => {
+              setClickedItem('Paltano')
+              handleFoodClick('Plátano')
+            }}
           >
             <motion.img
               src={paltano}
@@ -199,7 +283,10 @@ function ComidaPage() {
               cursor: 'pointer',
               zIndex: 2,
             }}
-            onClick={() => setClickedItem('Galleta')}
+            onClick={() => {
+              setClickedItem('Galleta')
+              handleFoodClick('Galleta')
+            }}
           >
             <motion.img
               src={galleta}
@@ -246,7 +333,10 @@ function ComidaPage() {
               cursor: 'pointer',
               zIndex: 2,
             }}
-            onClick={() => setClickedItem('Manzana')}
+            onClick={() => {
+              setClickedItem('Manzana')
+              handleFoodClick('Manzana')
+            }}
           >
             <motion.img
               src={manzana}
@@ -291,7 +381,10 @@ function ComidaPage() {
               cursor: 'pointer',
               zIndex: 2,
             }}
-            onClick={() => setClickedItem('Vaso')}
+            onClick={() => {
+              setClickedItem('Vaso')
+              handleFoodClick('Agua')
+            }}
           >
             <motion.img
               src={vaso}
@@ -333,7 +426,10 @@ function ComidaPage() {
               cursor: 'pointer',
               zIndex: 2,
             }}
-            onClick={() => setClickedItem('Biberon')}
+            onClick={() => {
+              setClickedItem('Biberon')
+              handleFoodClick('Leche')
+            }}
           >
             <motion.img
               src={biberon}
