@@ -341,10 +341,11 @@ function LoginPage() {
           >
             {/* Display del folio */}
             <div style={{
-              width: '100%',
+              margin: '0 12px',
+              alignSelf: 'stretch',
               background: 'rgba(255,255,255,0.07)',
               borderRadius: '16px',
-              padding: '14px 20px',
+              padding: '14px 24px',
               color: '#fff',
               fontSize: '32px',
               fontWeight: '800',

@@ -35,14 +35,6 @@ function SignUpPage() {
     })
   }, [])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
   const handleKeyPress = (field: 'name' | 'folio' | 'age', value: string) => {
     if (value === '⌫') {
       setFormData(prev => ({ ...prev, [field]: prev[field].slice(0, -1) }))
@@ -433,7 +425,7 @@ function SignUpPage() {
             <p style={{ margin: 0, color: 'rgba(255,255,255,0.6)', fontSize: '14px', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase' }}>
               {activeInput === 'folio' ? 'Número de folio' : 'Edad'}
             </p>
-            <div style={{ width: '100%', background: 'rgba(255,255,255,0.07)', borderRadius: '16px', padding: '14px 20px', color: '#fff', fontSize: '32px', fontWeight: '800', letterSpacing: '6px', textAlign: 'center', minHeight: '62px', border: '1.5px solid rgba(255,255,255,0.15)' }}>
+            <div style={{ margin: '0 12px', alignSelf: 'stretch', background: 'rgba(255,255,255,0.07)', borderRadius: '16px', padding: '14px 24px', color: '#fff', fontSize: '32px', fontWeight: '800', letterSpacing: '6px', textAlign: 'center', minHeight: '62px', border: '1.5px solid rgba(255,255,255,0.15)' }}>
               {formData[activeInput] || <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '20px', letterSpacing: '2px' }}>—</span>}
             </div>
             {[['1','2','3'],['4','5','6'],['7','8','9'],['⌫','0','✓']].map((row, ri) => (
@@ -472,7 +464,7 @@ function SignUpPage() {
             <p style={{ margin: 0, color: 'rgba(255,255,255,0.6)', fontSize: '14px', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase' }}>Nombre completo</p>
 
             {/* Display */}
-            <div style={{ width: '100%', background: 'rgba(255,255,255,0.07)', borderRadius: '14px', padding: '12px 18px', color: '#fff', fontSize: '22px', fontWeight: '700', minHeight: '52px', border: '1.5px solid rgba(255,255,255,0.15)', letterSpacing: '1px' }}>
+            <div style={{ margin: '0 12px', alignSelf: 'stretch', background: 'rgba(255,255,255,0.07)', borderRadius: '14px', padding: '12px 24px', color: '#fff', fontSize: '22px', fontWeight: '700', minHeight: '52px', border: '1.5px solid rgba(255,255,255,0.15)', letterSpacing: '1px' }}>
               {formData.name || <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '16px' }}>Escribe tu nombre...</span>}
             </div>
 

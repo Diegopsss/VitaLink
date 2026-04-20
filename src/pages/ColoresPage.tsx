@@ -15,7 +15,6 @@ import amarilloAudio from '../assets/Audios/palabras/colores/amarillo_palabras.m
 import azulAudio from '../assets/Audios/palabras/colores/azul_palabras.m4a'
 import rojoAudio from '../assets/Audios/palabras/colores/rojo_palabras.m4a'
 import verdeAudio from '../assets/Audios/palabras/colores/verde_palabras.m4a'
-import hazClicColoresAudio from '../assets/Audios/palabras/animales/haz clic_animales.m4a'
 
 function ColoresPage() {
   const [currentView, setCurrentView] = useState<'initial' | 'colorButtons'>('initial')

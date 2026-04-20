@@ -11,7 +11,6 @@ import MenuTab from '../../components/MenuTab'
 import diapositiva7Audio from '../../assets/Audios/presentacion/mode-selection/diapositiva 7_ presentación.m4a'
 import juegosAudio from '../../assets/Audios/presentacion/mode-selection/juegos_presentación.m4a'
 import cuentosAudio from '../../assets/Audios/presentacion/mode-selection/cuentos_presentación.m4a'
-import palabrasAudio from '../../assets/Audios/presentacion/mode-selection/palabras_presentación.m4a'
 import '../../styles/App.css'
 
 function ModeSelectionPage() {
