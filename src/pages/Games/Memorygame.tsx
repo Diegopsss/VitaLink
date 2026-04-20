@@ -7,6 +7,30 @@ import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import returnButton from '../../assets/Images/Buttons/return_button.png'
 import MenuTab from '../../components/MenuTab'
 
+// Audio de inicio
+import memoriaInstruccionesAudio from '../../assets/Audios/juegos/memorama/inicio memorama/memorama instrucciones_ juegos.m4a'
+
+// Audios de colores
+import azulAudio from '../../assets/Audios/juegos/memorama/colores/azul_memorama.m4a'
+import naranjaAudio from '../../assets/Audios/juegos/memorama/colores/naranja_memorama.m4a'
+import negroAudio from '../../assets/Audios/juegos/memorama/colores/negro_memorama.m4a'
+import rojoAudio from '../../assets/Audios/juegos/memorama/colores/rojo_memorama.m4a'
+import verdeAudio from '../../assets/Audios/juegos/memorama/colores/verde_memorama.m4a'
+
+// Audios de emociones
+import enojoAudio from '../../assets/Audios/juegos/memorama/emociones/enojo_ memorama.m4a'
+import felizAudio from '../../assets/Audios/juegos/memorama/emociones/feliz_memorama.m4a'
+import sustoAudio from '../../assets/Audios/juegos/memorama/emociones/susto_memorama.m4a'
+import tristeAudio from '../../assets/Audios/juegos/memorama/emociones/triste_memorama.m4a'
+import amorAudio from '../../assets/Audios/juegos/memorama/emociones/amor_memorama.m4a'
+
+// Audios de números
+import unoAudio from '../../assets/Audios/juegos/memorama/numeros/uno_memorama.m4a'
+import dosAudio from '../../assets/Audios/juegos/memorama/numeros/dos_memorama.m4a'
+import tresAudio from '../../assets/Audios/juegos/memorama/numeros/tres_memorama.m4a'
+import cuatroAudio from '../../assets/Audios/juegos/memorama/numeros/cuatro_memorama.m4a'
+import cincoAudio from '../../assets/Audios/juegos/memorama/numeros/cinco_memorama.m4a'
+
 import azul1 from '../../assets/Images/iconos_juego/memorama/colores/azul_1.png'
 import azul2 from '../../assets/Images/iconos_juego/memorama/colores/azul_2.png'
 import naranja1 from '../../assets/Images/iconos_juego/memorama/colores/naranja_1.png'
@@ -46,31 +70,32 @@ interface Card {
     image: string
     isFlipped: boolean
     isMatched: boolean
+    audio?: string
 }
 
 type GameSet = 'colores' | 'emociones' | 'numeros'
 
 const gameSets = {
     colores: [
-        { pairId: 'azul', images: [azul1, azul2] },
-        { pairId: 'naranja', images: [naranja1, naranja2] },
-        { pairId: 'negro', images: [negro1, negro2] },
-        { pairId: 'rojo', images: [rojo1, rojo2] },
-        { pairId: 'verde', images: [verde1, verde2] }
+        { pairId: 'azul', images: [azul1, azul2], audio: azulAudio },
+        { pairId: 'naranja', images: [naranja1, naranja2], audio: naranjaAudio },
+        { pairId: 'negro', images: [negro1, negro2], audio: negroAudio },
+        { pairId: 'rojo', images: [rojo1, rojo2], audio: rojoAudio },
+        { pairId: 'verde', images: [verde1, verde2], audio: verdeAudio }
     ],
     emociones: [
-        { pairId: 'enojo', images: [enojo1, enojo2] },
-        { pairId: 'feliz', images: [feliz1, feliz2] },
-        { pairId: 'susto', images: [susto1, susto2] },
-        { pairId: 'triste', images: [triste1, triste2] },
-        { pairId: 'amor', images: [amor1, amor2] }
+        { pairId: 'enojo', images: [enojo1, enojo2], audio: enojoAudio },
+        { pairId: 'feliz', images: [feliz1, feliz2], audio: felizAudio },
+        { pairId: 'susto', images: [susto1, susto2], audio: sustoAudio },
+        { pairId: 'triste', images: [triste1, triste2], audio: tristeAudio },
+        { pairId: 'amor', images: [amor1, amor2], audio: amorAudio }
     ],
     numeros: [
-        { pairId: '1', images: [num1_1, num1_2] },
-        { pairId: '2', images: [num2_1, num2_2] },
-        { pairId: '3', images: [num3_1, num3_2] },
-        { pairId: '4', images: [num4_1, num4_2] },
-        { pairId: '5', images: [num5_1, num5_2] }
+        { pairId: '1', images: [num1_1, num1_2], audio: unoAudio },
+        { pairId: '2', images: [num2_1, num2_2], audio: dosAudio },
+        { pairId: '3', images: [num3_1, num3_2], audio: tresAudio },
+        { pairId: '4', images: [num4_1, num4_2], audio: cuatroAudio },
+        { pairId: '5', images: [num5_1, num5_2], audio: cincoAudio }
     ]
 }
 
@@ -107,7 +132,8 @@ function MemoryGame() {
                     pairId: pair.pairId,
                     image: image,
                     isFlipped: false,
-                    isMatched: false
+                    isMatched: false,
+                    audio: pair.audio
                 })
             })
         })
@@ -131,6 +157,12 @@ function MemoryGame() {
 
     useEffect(() => {
         initializeGame()
+        
+        // Reproducir audio de instrucciones al iniciar el juego
+        const audio = new Audio(memoriaInstruccionesAudio)
+        audio.play().catch(error => {
+            console.log('Error reproduciendo audio de instrucciones:', error)
+        })
     }, [])
 
     useEffect(() => {
@@ -182,6 +214,14 @@ function MemoryGame() {
     const handleCardClick = (index: number) => {
         if (isChecking || cards[index].isFlipped || cards[index].isMatched || flippedIndices.length >= 2) {
             return
+        }
+
+        // Reproducir audio de la carta
+        if (cards[index].audio) {
+            const audio = new Audio(cards[index].audio)
+            audio.play().catch(error => {
+                console.log('Error reproduciendo audio de carta:', error)
+            })
         }
 
         setCards(prev => prev.map((card, idx) => 

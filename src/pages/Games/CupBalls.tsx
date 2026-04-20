@@ -10,6 +10,12 @@ import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png';
 import returnButton from '../../assets/Images/Buttons/return_button.png';
 import MenuTab from '../../components/MenuTab';
 
+// Audios del juego
+import instrucciones1Audio from '../../assets/Audios/juegos/colores a su lugar/vasos colores_instrucciones 1.m4a';
+import instrucciones2Audio from '../../assets/Audios/juegos/colores a su lugar/vasos colores_instrucciones 2.m4a';
+import azulAudio from '../../assets/Audios/juegos/colores a su lugar/extra azul_vasos.m4a';
+import naranjaAudio from '../../assets/Audios/juegos/colores a su lugar/extra naranja_vasos.m4a';
+
 type BallColor = 'azul' | 'naranja';
 type BallPosition = 'initial' | 'cup1' | 'cup2';
 
@@ -80,6 +86,19 @@ function CupBalls() {
         setCurrentLevel(1);
         setGameComplete(false);
         initializeLevel();
+        
+        // Reproducir audios de instrucciones en secuencia
+        const audio1 = new Audio(instrucciones1Audio);
+        audio1.play().catch(error => {
+            console.log('Error reproduciendo audio instrucciones 1:', error);
+        });
+        
+        audio1.addEventListener('ended', () => {
+            const audio2 = new Audio(instrucciones2Audio);
+            audio2.play().catch(error => {
+                console.log('Error reproduciendo audio instrucciones 2:', error);
+            });
+        });
     };
 
     const nextLevel = () => {
@@ -92,6 +111,19 @@ function CupBalls() {
         if (!element) return false;
         const rect = element.getBoundingClientRect();
         return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+    };
+
+    const handleDragStart = (ballId: number) => {
+        setDraggedBall(ballId);
+        
+        // Reproducir audio del color de la bola
+        const ball = balls.find(b => b.id === ballId);
+        if (ball) {
+            const audio = new Audio(ball.color === 'azul' ? azulAudio : naranjaAudio);
+            audio.play().catch(error => {
+                console.log('Error reproduciendo audio de color:', error);
+            });
+        }
     };
 
     const handleDragEnd = (ballId: number, info: PanInfo) => {
@@ -321,7 +353,7 @@ function CupBalls() {
                                             dragConstraints={gameAreaRef}
                                             dragElastic={0.1}
                                             dragMomentum={false}
-                                            onDragStart={() => setDraggedBall(ball.id)}
+                                            onDragStart={() => handleDragStart(ball.id)}
                                             onDrag={(_, info) => handleDrag(ball.id, info)}
                                             onDragEnd={(_, info) => handleDragEnd(ball.id, info)}
                                             whileHover={{ scale: 1.1 }}
@@ -407,7 +439,7 @@ function CupBalls() {
                                             dragConstraints={gameAreaRef}
                                             dragElastic={0.1}
                                             dragMomentum={false}
-                                            onDragStart={() => setDraggedBall(ball.id)}
+                                            onDragStart={() => handleDragStart(ball.id)}
                                             onDrag={(_, info) => handleDrag(ball.id, info)}
                                             onDragEnd={(_, info) => handleDragEnd(ball.id, info)}
                                             whileHover={{ scale: 1.1 }}

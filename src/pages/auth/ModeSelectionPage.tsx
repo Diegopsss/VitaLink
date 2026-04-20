@@ -10,6 +10,7 @@ import cuentosButton from '../../assets/Images/Buttons/cuentos_button.png'
 import MenuTab from '../../components/MenuTab'
 import diapositiva7Audio from '../../assets/Audios/presentacion/mode-selection/diapositiva 7_ presentación.m4a'
 import juegosAudio from '../../assets/Audios/presentacion/mode-selection/juegos_presentación.m4a'
+import palabrasAudio from '../../assets/Audios/presentacion/mode-selection/palabras_presentación.m4a'
 import cuentosAudio from '../../assets/Audios/presentacion/mode-selection/cuentos_presentación.m4a'
 import '../../styles/App.css'
 
@@ -29,26 +30,39 @@ function ModeSelectionPage() {
   }, [])
 
   // Función para reproducir audio de juegos
-  const handleJuegosClick = () => {
+  const handleJuegosClick = (e) => {
+    e.preventDefault()
     const audio = new Audio(juegosAudio)
     audio.play().catch(error => {
       console.log('Error reproduciendo audio juegos:', error)
     })
-    navigate('/games')
+    audio.addEventListener('ended', () => {
+      navigate('/games')
+    })
   }
 
   // Función para reproducir audio de cuentos
-  const handleCuentosClick = () => {
+  const handleCuentosClick = (e) => {
+    e.preventDefault()
     const audio = new Audio(cuentosAudio)
     audio.play().catch(error => {
       console.log('Error reproduciendo audio cuentos:', error)
     })
-    navigate('/stories')
+    audio.addEventListener('ended', () => {
+      navigate('/stories')
+    })
   }
 
-  // Función para navegar a palabras sin audio
-  const handlePalabrasClick = () => {
-    navigate('/words')
+  // Función para reproducir audio de palabras
+  const handlePalabrasClick = (e) => {
+    e.preventDefault()
+    const audio = new Audio(palabrasAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio palabras:', error)
+    })
+    audio.addEventListener('ended', () => {
+      navigate('/words')
+    })
   }
   return (
     <div

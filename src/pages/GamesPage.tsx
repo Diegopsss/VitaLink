@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
@@ -10,12 +10,12 @@ import secuenciaIcon from '../assets/Images/juegos_iconos/recuerda_secuencia.png
 import coloresIcon from '../assets/Images/juegos_iconos/separa_colores.png'
 import rutaIcon from '../assets/Images/juegos_iconos/ruta_magica_selection.png'
 import MenuTab from '../components/MenuTab'
+import fraseInterfazJuegosAudio from '../assets/Audios/juegos/inicio juegos/frase interfaz_juegos.m4a'
+import memoriaAudio from '../assets/Audios/juegos/inicio juegos/memorama título_juegos.m4a'
+import coloresAudio from '../assets/Audios/juegos/inicio juegos/vasos título_juegos.m4a'
+import rutaAudio from '../assets/Audios/juegos/inicio juegos/viaje carro título_juegos.m4a'
+import secuenciaAudio from '../assets/Audios/juegos/inicio juegos/colores título_juegos.m4a'
 import '../styles/App.css'
-import fraseInterfazAudio from '../assets/Audios/juegos/inicio juegos/frase interfaz_juegos.m4a'
-import coloresTituloAudio from '../assets/Audios/juegos/inicio juegos/colores título_juegos.m4a'
-import memoramaTituloAudio from '../assets/Audios/juegos/inicio juegos/memorama título_juegos.m4a'
-import vasosTituloAudio from '../assets/Audios/juegos/inicio juegos/vasos título_juegos.m4a'
-import viajeCarroTituloAudio from '../assets/Audios/juegos/inicio juegos/viaje carro título_juegos.m4a'
 
 function GamesPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -24,47 +24,13 @@ function GamesPage() {
   // Acceder a la música de fondo global
   useBackgroundMusic()
 
-  // Función para reproducir audio específico de cada juego
-  const playGameAudio = (route: string) => {
-    let audioFile: string;
-    
-    switch (route) {
-      case '/memory-game':
-        audioFile = memoramaTituloAudio;
-        break;
-      case '/cup-balls':
-        audioFile = vasosTituloAudio;
-        break;
-      case '/car-game':
-        audioFile = viajeCarroTituloAudio;
-        break;
-      case '/colors-game':
-        audioFile = coloresTituloAudio;
-        break;
-      default:
-        return;
-    }
-    
-    const audio = new Audio(audioFile);
-    audio.volume = 0.7; // Volumen alto para títulos de juegos
-    audio.play().catch(error => {
-      console.log(`Error reproduciendo audio del juego:`, error);
-    });
-  };
-
-  // Efecto para reproducir audio "fase interfaz" después del audio existente
+  // Reproducir audio 'frase interfaz_juegos' al cargar la página
   useEffect(() => {
-    // Esperar un momento para que se escuche el audio existente primero
-    const timer = setTimeout(() => {
-      const audio = new Audio(fraseInterfazAudio);
-      audio.volume = 0.7; // Volumen alto para frase interfaz
-      audio.play().catch(error => {
-        console.log('Error reproduciendo frase interfaz:', error);
-      });
-    }, 2000); // Esperar 2 segundos después del audio existente
-
-    return () => clearTimeout(timer);
-  }, []);
+    const audio = new Audio(fraseInterfazJuegosAudio)
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio frase interfaz_juegos:', error)
+    })
+  }, [])
 
   // Datos de los 4 juegos posibles
   const games = [
@@ -73,39 +39,47 @@ function GamesPage() {
       title: 'Encuentra la pareja',
       color: '#3065c9',
       icon: memoriaIcon,
-      route: '/memory-game'
+      route: '/memory-game',
+      audio: memoriaAudio
     },
     {
       id: 2,
       title: 'Colores a su lugar',
       color: '#3065c9',
       icon: coloresIcon,
-      route: '/cup-balls'
+      route: '/cup-balls',
+      audio: coloresAudio
     },
     {
       id: 3,
       title: 'Viaje a toda velocidad',
       color: '#3065c9',
       icon: rutaIcon,
-      route: '/car-game'
+      route: '/car-game',
+      audio: rutaAudio
     },
     {
       id: 4,
       title: 'Secuencia de colores',
       color: '#3065c9',
       icon: secuenciaIcon,
-      route: '/colors-game'
+      route: '/colors-game',
+      audio: secuenciaAudio
     }
   ]
 
-  const handleGameClick = (route: string) => {
-    // Reproducir audio específico del juego primero
-    playGameAudio(route);
-    
-    // Esperar un momento para que se escuche el audio antes de navegar
-    setTimeout(() => {
-      navigate(route);
-    }, 1500); // Esperar 1.5 segundos para el audio
+  const handleGameClick = (route: string, audioFile?: string) => {
+    if (audioFile) {
+      const audio = new Audio(audioFile)
+      audio.play().catch(error => {
+        console.log('Error reproduciendo audio:', error)
+      })
+      audio.addEventListener('ended', () => {
+        navigate(route)
+      })
+    } else {
+      navigate(route)
+    }
   }
 
   return (
@@ -197,7 +171,7 @@ function GamesPage() {
               boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)'
             }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => handleGameClick(game.route)}
+            onClick={() => handleGameClick(game.route, game.audio)}
             style={{
               cursor: 'pointer',
               display: 'flex',

@@ -14,10 +14,15 @@ import MenuTab from '../components/MenuTab'
 import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import fraseDiapositiva21Audio from '../assets/Audios/palabras/transportes/frase_diapositiva 21.m4a'
 import fraseDiapositiva22Audio from '../assets/Audios/palabras/transportes/frase_diapositiva 22.m4a'
+import transportePrincipalAudio from '../assets/Audios/palabras/words/transporte_diapositiva 8.m4a'
 import ambulanciaAudio from '../assets/Audios/palabras/transportes/ambulancia_transporte.m4a'
 import avionAudio from '../assets/Audios/palabras/transportes/avion_transporte.m4a'
 import carroAudio from '../assets/Audios/palabras/transportes/carro_transporte.m4a'
 import trenAudio from '../assets/Audios/palabras/transportes/tren_transporte.m4a'
+import efectoAmbulanciaAudio from '../assets/Audios/palabras/transportes/efecto_ambulancia.mp4'
+import efectoAvionAudio from '../assets/Audios/palabras/transportes/efecto_avion.mp4'
+import efectoCarroAudio from '../assets/Audios/palabras/transportes/efecto_carro_palabras.mp3'
+import efectoTrenAudio from '../assets/Audios/palabras/transportes/efecto_tren.mp3'
 
 function TransportePage() {
   const [currentView, setCurrentView] = useState<'initial' | 'transportElements'>('initial')
@@ -40,27 +45,67 @@ function TransportePage() {
   // Funciones para reproducir audios específicos de transporte
   const handleTransportClick = (transportName: string) => {
     let audioFile: string
+    let efectoFile: string
     
     switch (transportName) {
       case 'Ambulancia':
         audioFile = ambulanciaAudio
+        efectoFile = efectoAmbulanciaAudio
         break
       case 'Avion':
         audioFile = avionAudio
+        efectoFile = efectoAvionAudio
         break
       case 'Carro':
         audioFile = carroAudio
+        efectoFile = efectoCarroAudio
         break
       case 'Tren':
         audioFile = trenAudio
+        efectoFile = efectoTrenAudio
         break
       default:
         return
     }
     
+    // Primero reproducir el audio del transporte
     const audio = new Audio(audioFile)
+    
+    // Si es ambulancia, ajustar la duración a 3 segundos
+    if (transportName === 'Ambulancia') {
+      audio.addEventListener('loadedmetadata', () => {
+        // Si el audio es más largo de 3 segundos, cortarlo
+        if (audio.duration > 4) {
+          setTimeout(() => {
+            audio.pause()
+            // Disparar evento 'ended' manualmente para continuar con el efecto
+            audio.dispatchEvent(new Event('ended'))
+          }, 4000) // 4 segundos
+        }
+      })
+    }
+    
     audio.play().catch(error => {
       console.log(`Error reproduciendo audio ${transportName}:`, error)
+    })
+    
+    // Cuando termine el audio del transporte, reproducir el efecto específico
+    audio.addEventListener('ended', () => {
+      const efectoAudio = new Audio(efectoFile)
+      
+      // Si es ambulancia, recortar el efecto a exactamente 4 segundos
+      if (transportName === 'Ambulancia') {
+        efectoAudio.addEventListener('loadedmetadata', () => {
+          // Recortar el efecto a 4 segundos sin importar su duración original
+          setTimeout(() => {
+            efectoAudio.pause()
+          }, 4000) // Exactamente 4 segundos
+        })
+      }
+      
+      efectoAudio.play().catch(error => {
+        console.log(`Error reproduciendo efecto ${transportName}:`, error)
+      })
     })
   }
 

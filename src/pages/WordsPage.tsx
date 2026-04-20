@@ -28,26 +28,13 @@ function WordsPage() {
   // Acceder a la música de fondo global
   useBackgroundMusic()
 
-  // Reproducir secuencia de audios: palabras -> frase_palabras
+  // Reproducir solo el audio frase_palabras
   useEffect(() => {
     const timer = setTimeout(() => {
-      // Reproducir audio 'palabras' primero
-      const audio1 = new Audio(palabrasAudio)
-      audio1.play().catch(error => {
-        console.log('Error reproduciendo audio palabras:', error)
+      const audio = new Audio(frasePalabrasAudio)
+      audio.play().catch(error => {
+        console.log('Error reproduciendo audio frase palabras:', error)
       })
-      
-      // Cuando termine 'palabras', reproducir 'frase_palabras'
-      audio1.addEventListener('ended', () => {
-        const audio2 = new Audio(frasePalabrasAudio)
-        audio2.play().catch(error => {
-          console.log('Error reproduciendo audio frase palabras:', error)
-        })
-      })
-
-      return () => {
-        audio1.removeEventListener('ended', () => {})
-      }
     }, 500)
 
     return () => clearTimeout(timer)
