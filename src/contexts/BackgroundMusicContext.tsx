@@ -29,7 +29,7 @@ export const BackgroundMusicProvider: React.FC<{ children: React.ReactNode }> = 
     if (!audioRef.current) {
       audioRef.current = new Audio(babyMozartAudio)
       audioRef.current.loop = true
-      audioRef.current.volume = 0.25 // Volumen aumentado (25%)
+      audioRef.current.volume = 0.05 // Volumen aumentado (10%)
       audioRef.current.preload = 'auto'
     }
 

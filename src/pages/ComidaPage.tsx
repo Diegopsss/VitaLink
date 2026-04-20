@@ -12,6 +12,7 @@ import manzana from '../assets/Images/comida_iconos/manzana.png'
 import vaso from '../assets/Images/comida_iconos/vaso.png'
 import biberon from '../assets/Images/comida_iconos/biberon.png'
 import MenuTab from '../components/MenuTab'
+import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import fraseDiapositiva18Audio from '../assets/Audios/palabras/comida/frase_ diapositiva 18.m4a'
 import fraseDiapositiva19Audio from '../assets/Audios/palabras/comida/frase_diapositiva 19.m4a'
 import aguaAudio from '../assets/Audios/palabras/comida/agua_comida.m4a'
@@ -24,6 +25,19 @@ function ComidaPage() {
   const [currentView, setCurrentView] = useState<'initial' | 'emptyPlate' | 'foodDisplay'>('initial')
   const [clickedItem, setClickedItem] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  
+  // Acceder a la música de fondo y bajar el volumen para esta página
+  const { setVolume } = useBackgroundMusic()
+  
+  useEffect(() => {
+    // Bajar el volumen de la música de fondo a 10% para no interferir con audios principales
+    setVolume(0.1)
+    
+    // Cleanup: restaurar volumen al salir de la página
+    return () => {
+      setVolume(0.25) // Volumen normal
+    }
+  }, [setVolume])
 
   // Funciones para reproducir audios específicos de comida
   const handleFoodClick = (foodName: string) => {

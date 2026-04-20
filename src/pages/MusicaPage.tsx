@@ -12,6 +12,7 @@ import maracas from '../assets/Images/iconos_musica/maracas.png'
 import tambor from '../assets/Images/iconos_musica/tambor.png'
 import trompeta from '../assets/Images/iconos_musica/trompeta.png'
 import MenuTab from '../components/MenuTab'
+import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import fraseDiapositiva23Audio from '../assets/Audios/palabras/musica/frase_diapositiva 23.m4a'
 import fraseDiapositiva24Audio from '../assets/Audios/palabras/musica/frase_diapositiva 24.m4a'
 import aplausosAudio from '../assets/Audios/palabras/musica/aplausos_música.m4a'
@@ -20,38 +21,120 @@ import maracasAudio from '../assets/Audios/palabras/musica/maracas_musica.m4a'
 import tamborAudio from '../assets/Audios/palabras/musica/tambor_musica.m4a'
 import trompetaAudio from '../assets/Audios/palabras/musica/trompeta_musica.m4a'
 
+// Importar efectos de sonido de música
+import efectoAplausos from '../assets/Audios/palabras/musica/efecto_aplausos.mp3'
+import efectoGuitarra from '../assets/Audios/palabras/musica/efecto_guitarra.mp3'
+import efectoMaracas from '../assets/Audios/palabras/musica/efecto_maracas.mp3'
+import efectoTambores from '../assets/Audios/palabras/musica/efecto_tambores.mp3'
+import efectoTrompetas from '../assets/Audios/palabras/musica/efecto_trompetas.mp3'
+
 function MusicaPage() {
   const [currentView, setCurrentView] = useState<'initial' | 'musicElements'>('initial')
   const [clickedMusic, setClickedMusic] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  
+  // Configuración de efectos de sonido (fácil de ajustar)
+  const efectosConfig = {
+    // Volumen de los efectos (0.0 a 1.0)
+    volumen: 0.3, // 30% de volumen - fácil de ajustar
+    // Duración máxima por instrumento en segundos (null para reproducir completo)
+    duraciones: {
+      'Aplauso': 2,    // 2 segundos
+      'Guitarra': 3,    // 3 segundos
+      'Maracas': 2,     // 2 segundos
+      'Tambor': 3.5,      // 3.5 segundos
+      'Trompeta': 4     // 4 segundos
+    },
+    // Tiempo inicial para empezar a reproducir el efecto (en segundos)
+    tiempoInicial: {
+      'Aplauso': 0,    // 0 segundos (empieza desde el principio)
+      'Guitarra': 0,    // 0 segundos (empieza desde el principio)
+      'Maracas': 1.5,   // 1.5 segundos (empieza avanzado para evitar silencio)
+      'Tambor': 1.2,   // 1.2 segundos (empieza avanzado para que salga antes)
+      'Trompeta': 1.2   // 1.2 segundos (empieza avanzado para evitar silencio)
+    },
+    // Retraso antes de iniciar el efecto después del audio del instrumento (en milisegundos)
+    retraso: 100 // 100ms - reducido para que salga antes
+  }
+  
+  // Acceder a la música de fondo y bajar el volumen para esta página
+  const { setVolume } = useBackgroundMusic()
+  
+  useEffect(() => {
+    // Bajar el volumen de la música de fondo a 10% para no interferir con audios principales
+    setVolume(0.1)
+    
+    // Cleanup: restaurar volumen al salir de la página
+    return () => {
+      setVolume(0.25) // Volumen normal
+    }
+  }, [setVolume])
 
   // Funciones para reproducir audios específicos de música
   const handleMusicClick = (musicName: string) => {
     let audioFile: string
+    let efectoFile: string
     
     switch (musicName) {
       case 'Aplauso':
         audioFile = aplausosAudio
+        efectoFile = efectoAplausos
         break
       case 'Guitarra':
         audioFile = guitarraAudio
+        efectoFile = efectoGuitarra
         break
       case 'Maracas':
         audioFile = maracasAudio
+        efectoFile = efectoMaracas
         break
       case 'Tambor':
         audioFile = tamborAudio
+        efectoFile = efectoTambores
         break
       case 'Trompeta':
         audioFile = trompetaAudio
+        efectoFile = efectoTrompetas
         break
       default:
         return
     }
     
+    // Reproducir audio del instrumento primero
     const audio = new Audio(audioFile)
     audio.play().catch(error => {
       console.log(`Error reproduciendo audio ${musicName}:`, error)
+    })
+    
+    // Después de que termine el audio del instrumento, reproducir el efecto
+    audio.addEventListener('ended', () => {
+      setTimeout(() => {
+        const efecto = new Audio(efectoFile)
+        efecto.volume = efectosConfig.volumen
+        
+        // Obtener la duración específica para este instrumento
+        const duracionInstrumento = efectosConfig.duraciones[musicName as keyof typeof efectosConfig.duraciones]
+        
+        // Obtener el tiempo inicial para este instrumento
+        const tiempoInicialInstrumento = efectosConfig.tiempoInicial[musicName as keyof typeof efectosConfig.tiempoInicial]
+        
+        // Establecer el tiempo inicial si está configurado
+        if (tiempoInicialInstrumento) {
+          efecto.currentTime = tiempoInicialInstrumento
+        }
+        
+        // Si hay duración configurada para este instrumento, cortar el efecto
+        if (duracionInstrumento) {
+          setTimeout(() => {
+            efecto.pause()
+            efecto.currentTime = 0
+          }, duracionInstrumento * 1000)
+        }
+        
+        efecto.play().catch(error => {
+          console.log(`Error reproduciendo efecto de ${musicName}:`, error)
+        })
+      }, efectosConfig.retraso)
     })
   }
 

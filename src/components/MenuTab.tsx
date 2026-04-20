@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 
 interface MenuTabProps {
   isOpen: boolean
@@ -11,6 +12,7 @@ function MenuTab({ isOpen, onClose }: MenuTabProps) {
   const [volume, setVolume] = useState(50)
   const [error] = useState('')
   const navigate = useNavigate()
+  const { isPlaying, toggleMusic } = useBackgroundMusic()
 
   const handleResumeGame = () => {
     onClose()
@@ -223,6 +225,29 @@ function MenuTab({ isOpen, onClose }: MenuTabProps) {
                   }}
                 />
               </div>
+
+              {/* Botón Pausar/Reanudar Música */}
+              <motion.button
+                whileHover={{ scale: 1.02, x: 5 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={toggleMusic}
+                style={{
+                  backgroundColor: isPlaying ? '#FF9800' : '#9C27B0',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '12px 20px',
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  width: '100%',
+                  textAlign: 'left',
+                  marginTop: '15px',
+                }}
+              >
+                {isPlaying ? 'Pausar Música' : 'Reanudar Música'}
+              </motion.button>
 
               {/* Mensaje de error */}
               {error && (

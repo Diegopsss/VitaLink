@@ -33,8 +33,18 @@ function PersonasPage() {
   const [canTransitionToBaby, setCanTransitionToBaby] = useState(false)
   const [canTransitionToGrandparents, setCanTransitionToGrandparents] = useState(false)
   
-  // Acceder a la música de fondo global
-  useBackgroundMusic()
+  // Acceder a la música de fondo global y ajustar volumen
+  const { setVolume } = useBackgroundMusic()
+  
+  useEffect(() => {
+    // Bajar el volumen de la música de fondo a 10% para no interferir con audios principales
+    setVolume(0.1)
+    
+    // Cleanup: restaurar volumen al salir de la página
+    return () => {
+      setVolume(0.25) // Volumen normal
+    }
+  }, [setVolume])
   const [isAnimatingAbuela, setIsAnimatingAbuela] = useState(false)
   const [isAnimatingAbuelo, setIsAnimatingAbuelo] = useState(false)
   const [isAnimatingMama, setIsAnimatingMama] = useState(false)

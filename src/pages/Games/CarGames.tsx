@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import fondoCarro from '../../assets/Images/Backgrounds/fondos juegos/fondo_carro.svg'
@@ -11,6 +11,14 @@ import iconoTienda from '../../assets/Images/iconos_juego/Carro/icono_tienda.png
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import returnButton from '../../assets/Images/Buttons/return_button.png'
 import MenuTab from '../../components/MenuTab'
+import { useBackgroundMusic } from '../../contexts/BackgroundMusicContext'
+import carGameAudio from '../../assets/Audios/juegos/Carro juego/mizanstock-bmw-xm-car-sound-2023-165995.mp3'
+import carroCasaAudio from '../../assets/Audios/juegos/Carro juego/carro casa_juegos.m4a'
+import carroTiendaAudio from '../../assets/Audios/juegos/Carro juego/carro tienda_juegos.m4a'
+import carroEscuelaAudio from '../../assets/Audios/juegos/Carro juego/carro escuela_juegos.m4a'
+import carroParqueAudio from '../../assets/Audios/juegos/Carro juego/carro parque _juegos.m4a'
+import instrucciones1Audio from '../../assets/Audios/juegos/Carro juego/carro instrucciones 1_juegos.m4a'
+
 import '../../styles/App.css'
 
 interface Obstacle {
@@ -32,6 +40,56 @@ function CarGames() {
     const [showIniciamos, setShowIniciamos] = useState(false)
     const [gameStarted, setGameStarted] = useState(false)
     const [showConfetti, setShowConfetti] = useState(false)
+    
+    // Acceder a la música de fondo global y controlar volumen
+    const { setVolume } = useBackgroundMusic()
+    
+    // Referencia para el audio del juego
+    const gameAudioRef = useRef<HTMLAudioElement | null>(null)
+
+    // Referencia para detener audios anteriores y evitar cruzados
+    const currentLocationAudioRef = useRef<HTMLAudioElement | null>(null)
+
+    // Función para reproducir audio específico según el lugar
+    const playLocationAudio = (icon: string) => {
+        let audioFile: string
+        
+        switch (icon) {
+            case iconoCasa:
+                audioFile = carroCasaAudio
+                break
+            case iconoTienda:
+                audioFile = carroTiendaAudio
+                break
+            case iconoParque:
+                audioFile = carroParqueAudio
+                break
+            default:
+                return
+        }
+        
+        // Detener audio anterior para evitar cruzados
+        if (currentLocationAudioRef.current) {
+            currentLocationAudioRef.current.pause()
+            currentLocationAudioRef.current.currentTime = 0
+        }
+        
+        // Crear y reproducir nuevo audio
+        const audio = new Audio(audioFile)
+        audio.volume = 0.5 // Volumen más alto para los audios de lugares
+        currentLocationAudioRef.current = audio // Guardar referencia
+        
+        audio.play().catch(error => {
+            console.log(`Error reproduciendo audio del lugar:`, error)
+        })
+        
+        // Limpiar referencia cuando termine
+        audio.addEventListener('ended', () => {
+            if (currentLocationAudioRef.current === audio) {
+                currentLocationAudioRef.current = null
+            }
+        })
+    }
 
     const moveSpeed = 3
     const minPosition = -400
@@ -43,6 +101,24 @@ function CarGames() {
         { id: 3, finalX: 450, name: 'right-outer' }
     ]
     const obstacleIcons = [iconoCasa, iconoParque, iconoTienda]
+
+    // Efecto para controlar música de fondo y reproducir instrucciones al entrar
+    useEffect(() => {
+        // Bajar el volumen de la música de fondo a casi nada
+        setVolume(0.02) // 2% de volumen - casi inaudible
+        
+        // Reproducir audio de instrucciones al entrar
+        const audio = new Audio(instrucciones1Audio)
+        audio.volume = 0.6 // Volumen alto para instrucciones
+        audio.play().catch(error => {
+            console.log('Error reproduciendo instrucciones:', error)
+        })
+        
+        // Cleanup: restaurar volumen al salir
+        return () => {
+            setVolume(0.05) // Restaurar al volumen normal bajo
+        }
+    }, [setVolume])
 
     useEffect(() => {
         let animationFrame: number
@@ -122,6 +198,10 @@ function CarGames() {
                         lane: randomLane.finalX,
                         progress: 0
                     }
+                    
+                    // Reproducir audio específico cuando spawnea el nuevo icono
+                    playLocationAudio(randomIcon)
+                    
                     setObstacleIdCounter(prev => prev + 1)
                     return [newObstacle]
                 }
@@ -139,6 +219,39 @@ function CarGames() {
             }
         }
     }, [gameStarted, obstacleIdCounter, carPosition])
+
+    // Efecto para manejar el audio del juego
+    useEffect(() => {
+        // Crear el elemento de audio del juego
+        if (!gameAudioRef.current) {
+            gameAudioRef.current = new Audio(carGameAudio)
+            gameAudioRef.current.loop = true
+            gameAudioRef.current.volume = 0.01 // Volumen audible pero de fondo (3%)
+            gameAudioRef.current.preload = 'auto'
+        }
+
+        // Iniciar el audio del juego en loop con volumen original
+        if (gameStarted && gameAudioRef.current) {
+            const playAudio = async () => {
+                try {
+                    gameAudioRef.current.volume = 0.03 // Volumen audible pero de fondo (3%)
+                    await gameAudioRef.current!.play()
+                    console.log('Audio del juego iniciado')
+                } catch (error) {
+                    console.log('Error reproduciendo audio del juego:', error)
+                }
+            }
+            playAudio()
+        }
+
+        // Pausar el audio cuando el juego termine o se cambie de página
+        return () => {
+            if (gameAudioRef.current) {
+                gameAudioRef.current.pause()
+                gameAudioRef.current.currentTime = 0
+            }
+        }
+    }, [gameStarted])
 
     return (
         <div
@@ -307,7 +420,7 @@ function CarGames() {
                         style={{
                             position: 'absolute',
                             bottom: `${yPosition}%`,
-                            width: '200px',
+                            width: '280px', // Aumentado de 200px a 280px (40% más grande)
                             zIndex: 4,
                             opacity: 0.7 + progressRatio * 0.3,
                             transform: 'translateX(-50%)',

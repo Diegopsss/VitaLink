@@ -9,6 +9,11 @@ import amarilloImg from '../../assets/Images/iconos_juego/Secuencia colores/amar
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png';
 import returnButton from '../../assets/Images/Buttons/return_button.png';
 import MenuTab from '../../components/MenuTab';
+import secuenciaColoresAudio from '../../assets/Audios/juegos/secuencia colores/secuencia de colores_instrucciones.m4a';
+import rojoAudio from '../../assets/Audios/juegos/secuencia colores/extra rojo_secuencia.m4a';
+import azulAudio from '../../assets/Audios/juegos/secuencia colores/extra azul_secuencia.m4a';
+import verdeAudio from '../../assets/Audios/juegos/secuencia colores/extra verde_secuencia.m4a';
+import amarilloAudio from '../../assets/Audios/juegos/secuencia colores/extra amarillo_secuencia.m4a';
 
 type ColorId = 'rojo' | 'azul' | 'verde' | 'amarillo';
 
@@ -28,6 +33,43 @@ const colors: ColorButton[] = [
 function ColorsGame() {
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    // Función para reproducir audio específico de cada color
+    const playColorAudio = (colorId: ColorId) => {
+        let audioFile: string;
+        
+        switch (colorId) {
+            case 'rojo':
+                audioFile = rojoAudio;
+                break;
+            case 'azul':
+                audioFile = azulAudio;
+                break;
+            case 'verde':
+                audioFile = verdeAudio;
+                break;
+            case 'amarillo':
+                audioFile = amarilloAudio;
+                break;
+            default:
+                return;
+        }
+        
+        const audio = new Audio(audioFile);
+        audio.volume = 0.6; // Volumen alto para colores
+        audio.play().catch(error => {
+            console.log(`Error reproduciendo audio del color:`, error);
+        });
+    };
+
+    // Efecto para reproducir audio de instrucciones al entrar
+    useEffect(() => {
+        const audio = new Audio(secuenciaColoresAudio);
+        audio.volume = 0.7; // Volumen alto para instrucciones
+        audio.play().catch(error => {
+            console.log('Error reproduciendo instrucciones de colores:', error);
+        });
+    }, []);
     const [sequence, setSequence] = useState<ColorId[]>([]);
     const [userSequence, setUserSequence] = useState<ColorId[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -62,6 +104,8 @@ function ColorsGame() {
                 timeoutRef.current = setTimeout(() => {
                     setHighlightedColor(seq[i]);
                     setCurrentStep(i);
+                    // Reproducir audio del color cuando se ilumina
+                    playColorAudio(seq[i]);
                     resolve(undefined);
                 }, 600);
             });
@@ -87,6 +131,9 @@ function ColorsGame() {
 
         setHighlightedColor(colorId);
         setTimeout(() => setHighlightedColor(null), 300);
+
+        // Reproducir audio del color cuando el niño hace clic
+        playColorAudio(colorId);
 
         const currentIndex = newUserSequence.length - 1;
         

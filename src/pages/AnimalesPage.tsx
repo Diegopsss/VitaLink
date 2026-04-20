@@ -13,6 +13,7 @@ import oveja from '../assets/Images/Buttons/oveja.png'
 import perro from '../assets/Images/Buttons/perro.png'
 import vaca from '../assets/Images/Buttons/vaca.png'
 import MenuTab from '../components/MenuTab'
+import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import fraseDiapositiva11Audio from '../assets/Audios/palabras/animales/frase_diapositiva 11.m4a'
 import caballoAudio from '../assets/Audios/palabras/animales/caballo_animales.m4a'
 import gallinaAudio from '../assets/Audios/palabras/animales/gallina_animales.m4a'
@@ -22,10 +23,57 @@ import perroAudio from '../assets/Audios/palabras/animales/perro_animales.m4a'
 import vacaAudio from '../assets/Audios/palabras/animales/vaca_animales.m4a'
 import hazClicAudio from '../assets/Audios/palabras/animales/haz clic_animales.m4a'
 
+// Importar efectos de sonido de animales
+import efectoCaballo from '../assets/Audios/palabras/animales/efecto_caballo.mp3'
+import efectoGallina from '../assets/Audios/palabras/animales/efecto_gallina.mp3'
+import efectoGato from '../assets/Audios/palabras/animales/efecto_gato.mp3'
+import efectoOveja from '../assets/Audios/palabras/animales/efecto_oveja.mp3'
+import efectoPerro from '../assets/Audios/palabras/animales/efecto_perro.mp3'
+import efectoVaca from '../assets/Audios/palabras/animales/efecto_vaca.mp3'
+
 function AnimalesPage() {
   const [currentView, setCurrentView] = useState<'initial' | 'animalButtons'>('initial')
   const [clickedAnimal, setClickedAnimal] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  
+  // Configuración de efectos de sonido (fácil de ajustar)
+  const efectosConfig = {
+    // Volumen de los efectos (0.0 a 1.0)
+    volumen: 0.3, // 30% de volumen - fácil de ajustar
+    // Duración máxima por animal en segundos (null para reproducir completo)
+    duraciones: {
+      'Caballo': 2,    // 2 segundos
+      'Gallo': 2,      // 2 segundos
+      'Gato': 2,       // 2 segundos
+      'Oveja': 2,      // 2 segundos
+      'Perro': 3,      // 3 segundos (1 segundo más)
+      'Vaca': 3        // 3 segundos (1 segundo más)
+    },
+    // Tiempo inicial para empezar a reproducir el efecto (en segundos)
+    tiempoInicial: {
+      'Caballo': 0,    // 0 segundos (empieza desde el principio)
+      'Gallo': 0,      // 0 segundos (empieza desde el principio)
+      'Gato': 0,       // 0 segundos (empieza desde el principio)
+      'Oveja': 0,      // 0 segundos (empieza desde el principio)
+      'Perro': 0.5,    // 0.5 segundos (empieza avanzado)
+      'Vaca': 0        // 0 segundos (empieza desde el principio)
+    },
+    // Retraso antes de iniciar el efecto después del audio del animal (en milisegundos)
+    retraso: 200 // 200ms - fácil de ajustar
+  }
+  
+  // Acceder a la música de fondo y bajar el volumen para esta página
+  const { setVolume } = useBackgroundMusic()
+  
+  useEffect(() => {
+    // Bajar el volumen de la música de fondo a 10% para no interferir con audios principales
+    setVolume(0.1)
+    
+    // Cleanup: restaurar volumen al salir de la página
+    return () => {
+      setVolume(0.25) // Volumen normal
+    }
+  }, [setVolume])
 
   useEffect(() => {
     // Esperar a que termine el audio de animales (3 segundos de retraso)
@@ -80,33 +128,72 @@ function AnimalesPage() {
   // Funciones para reproducir audios específicos de animales
   const handleAnimalClick = (animalName: string) => {
     let audioFile: string
+    let efectoFile: string
     
     switch (animalName) {
       case 'Caballo':
         audioFile = caballoAudio
+        efectoFile = efectoCaballo
         break
       case 'Gallo':
         audioFile = gallinaAudio
+        efectoFile = efectoGallina
         break
       case 'Gato':
         audioFile = gatoAudio
+        efectoFile = efectoGato
         break
       case 'Oveja':
         audioFile = ovejaAudio
+        efectoFile = efectoOveja
         break
       case 'Perro':
         audioFile = perroAudio
+        efectoFile = efectoPerro
         break
       case 'Vaca':
         audioFile = vacaAudio
+        efectoFile = efectoVaca
         break
       default:
         return
     }
     
+    // Reproducir audio del animal primero
     const audio = new Audio(audioFile)
     audio.play().catch(error => {
       console.log(`Error reproduciendo audio ${animalName}:`, error)
+    })
+    
+    // Después de que termine el audio del animal, reproducir el efecto
+    audio.addEventListener('ended', () => {
+      setTimeout(() => {
+        const efecto = new Audio(efectoFile)
+        efecto.volume = efectosConfig.volumen
+        
+        // Obtener la duración específica para este animal
+        const duracionAnimal = efectosConfig.duraciones[animalName as keyof typeof efectosConfig.duraciones]
+        
+        // Obtener el tiempo inicial para este animal
+        const tiempoInicialAnimal = efectosConfig.tiempoInicial[animalName as keyof typeof efectosConfig.tiempoInicial]
+        
+        // Establecer el tiempo inicial si está configurado
+        if (tiempoInicialAnimal) {
+          efecto.currentTime = tiempoInicialAnimal
+        }
+        
+        // Si hay duración configurada para este animal, cortar el efecto
+        if (duracionAnimal) {
+          setTimeout(() => {
+            efecto.pause()
+            efecto.currentTime = 0
+          }, duracionAnimal * 1000)
+        }
+        
+        efecto.play().catch(error => {
+          console.log(`Error reproduciendo efecto de ${animalName}:`, error)
+        })
+      }, efectosConfig.retraso)
     })
   }
 

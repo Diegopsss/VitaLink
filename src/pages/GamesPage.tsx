@@ -11,6 +11,11 @@ import coloresIcon from '../assets/Images/juegos_iconos/separa_colores.png'
 import rutaIcon from '../assets/Images/juegos_iconos/ruta_magica_selection.png'
 import MenuTab from '../components/MenuTab'
 import '../styles/App.css'
+import fraseInterfazAudio from '../assets/Audios/juegos/inicio juegos/frase interfaz_juegos.m4a'
+import coloresTituloAudio from '../assets/Audios/juegos/inicio juegos/colores título_juegos.m4a'
+import memoramaTituloAudio from '../assets/Audios/juegos/inicio juegos/memorama título_juegos.m4a'
+import vasosTituloAudio from '../assets/Audios/juegos/inicio juegos/vasos título_juegos.m4a'
+import viajeCarroTituloAudio from '../assets/Audios/juegos/inicio juegos/viaje carro título_juegos.m4a'
 
 function GamesPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -18,6 +23,48 @@ function GamesPage() {
   
   // Acceder a la música de fondo global
   useBackgroundMusic()
+
+  // Función para reproducir audio específico de cada juego
+  const playGameAudio = (route: string) => {
+    let audioFile: string;
+    
+    switch (route) {
+      case '/memory-game':
+        audioFile = memoramaTituloAudio;
+        break;
+      case '/cup-balls':
+        audioFile = vasosTituloAudio;
+        break;
+      case '/car-game':
+        audioFile = viajeCarroTituloAudio;
+        break;
+      case '/colors-game':
+        audioFile = coloresTituloAudio;
+        break;
+      default:
+        return;
+    }
+    
+    const audio = new Audio(audioFile);
+    audio.volume = 0.7; // Volumen alto para títulos de juegos
+    audio.play().catch(error => {
+      console.log(`Error reproduciendo audio del juego:`, error);
+    });
+  };
+
+  // Efecto para reproducir audio "fase interfaz" después del audio existente
+  useEffect(() => {
+    // Esperar un momento para que se escuche el audio existente primero
+    const timer = setTimeout(() => {
+      const audio = new Audio(fraseInterfazAudio);
+      audio.volume = 0.7; // Volumen alto para frase interfaz
+      audio.play().catch(error => {
+        console.log('Error reproduciendo frase interfaz:', error);
+      });
+    }, 2000); // Esperar 2 segundos después del audio existente
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Datos de los 4 juegos posibles
   const games = [
@@ -52,7 +99,13 @@ function GamesPage() {
   ]
 
   const handleGameClick = (route: string) => {
-    navigate(route)
+    // Reproducir audio específico del juego primero
+    playGameAudio(route);
+    
+    // Esperar un momento para que se escuche el audio antes de navegar
+    setTimeout(() => {
+      navigate(route);
+    }, 1500); // Esperar 1.5 segundos para el audio
   }
 
   return (

@@ -11,6 +11,7 @@ import avion from '../assets/Images/iconos_transportes/avion.png'
 import carro from '../assets/Images/iconos_transportes/carro.png'
 import tren from '../assets/Images/iconos_transportes/tren.png'
 import MenuTab from '../components/MenuTab'
+import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import fraseDiapositiva21Audio from '../assets/Audios/palabras/transportes/frase_diapositiva 21.m4a'
 import fraseDiapositiva22Audio from '../assets/Audios/palabras/transportes/frase_diapositiva 22.m4a'
 import ambulanciaAudio from '../assets/Audios/palabras/transportes/ambulancia_transporte.m4a'
@@ -22,6 +23,19 @@ function TransportePage() {
   const [currentView, setCurrentView] = useState<'initial' | 'transportElements'>('initial')
   const [clickedTransport, setClickedTransport] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  
+  // Acceder a la música de fondo y bajar el volumen para esta página
+  const { setVolume } = useBackgroundMusic()
+  
+  useEffect(() => {
+    // Bajar el volumen de la música de fondo a 10% para no interferir con audios principales
+    setVolume(0.1)
+    
+    // Cleanup: restaurar volumen al salir de la página
+    return () => {
+      setVolume(0.25) // Volumen normal
+    }
+  }, [setVolume])
 
   // Funciones para reproducir audios específicos de transporte
   const handleTransportClick = (transportName: string) => {

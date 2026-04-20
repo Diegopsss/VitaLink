@@ -10,6 +10,7 @@ import yellowButton from '../assets/Images/Buttons/yellow_button.png'
 import redButton from '../assets/Images/Buttons/red_button.png'
 import azulButton from '../assets/Images/Buttons/azul_button.png'
 import MenuTab from '../components/MenuTab'
+import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import fraseDiapositiva9Audio from '../assets/Audios/palabras/colores/frase_diapositiva 9.m4a'
 import amarilloAudio from '../assets/Audios/palabras/colores/amarillo_palabras.m4a'
 import azulAudio from '../assets/Audios/palabras/colores/azul_palabras.m4a'
@@ -20,6 +21,19 @@ import hazClicColoresAudio from '../assets/Audios/palabras/animales/haz clic_ani
 function ColoresPage() {
   const [currentView, setCurrentView] = useState<'initial' | 'colorButtons'>('initial')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  
+  // Acceder a la música de fondo y bajar el volumen para esta página
+  const { setVolume } = useBackgroundMusic()
+  
+  useEffect(() => {
+    // Bajar el volumen de la música de fondo a 10% para no interferir con audios principales
+    setVolume(0.1)
+    
+    // Cleanup: restaurar volumen al salir de la página
+    return () => {
+      setVolume(0.25) // Volumen normal
+    }
+  }, [setVolume])
 
   // Funciones para reproducir audios específicos de colores
   const handleColorClick = (colorName: string) => {
