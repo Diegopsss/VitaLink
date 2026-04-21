@@ -147,11 +147,10 @@ function CarGames() {
         // Bajar el volumen de la música de fondo a casi nada
         setVolume(0.02) // 2% de volumen - casi inaudible
         
-<<<<<<< HEAD
         // Reproducir audio de instrucciones solo una vez al entrar
         if (!instructionsPlayed) {
             const audio = new Audio(instrucciones1Audio)
-            audio.volume = 0.6 // Volumen alto para instrucciones
+            audio.volume = getMasterVolume() * 0.6
             audio.play().catch(error => {
                 console.log('Error reproduciendo instrucciones:', error)
             })
@@ -159,14 +158,6 @@ function CarGames() {
             // Marcar que las instrucciones ya se reprodujeron
             setInstructionsPlayed(true)
         }
-=======
-        // Reproducir audio de instrucciones al entrar
-        const audio = new Audio(instrucciones1Audio)
-        audio.volume = getMasterVolume() * 0.6
-        audio.play().catch(error => {
-            console.log('Error reproduciendo instrucciones:', error)
-        })
->>>>>>> 5803efb9b4c5cd70c60d72d2115f51d93abbf522
         
         // Cleanup: restaurar volumen al salir
         return () => {
@@ -336,11 +327,7 @@ function CarGames() {
         if (gameStarted && gameAudioRef.current) {
             const playAudio = async () => {
                 try {
-<<<<<<< HEAD
-                    gameAudioRef.current!.volume = 0.03 // Volumen audible pero de fondo (3%)
-=======
                     gameAudioRef.current!.volume = getMasterVolume() * 0.03
->>>>>>> 5803efb9b4c5cd70c60d72d2115f51d93abbf522
                     await gameAudioRef.current!.play()
                     console.log('Audio del juego iniciado')
                 } catch (error) {
