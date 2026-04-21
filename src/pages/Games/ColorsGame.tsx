@@ -133,7 +133,11 @@ function ColorsGame() {
         setUserSequence(newUserSequence);
 
         setHighlightedColor(colorId);
-        setTimeout(() => setHighlightedColor(null), 300);
+        if (getPiUrl()) setColor(colorId).catch(() => {});
+        setTimeout(() => {
+            setHighlightedColor(null);
+            if (getPiUrl()) turnOff().catch(() => {});
+        }, 300);
 
         // Reproducir audio del color cuando el niño hace clic
         playColorAudio(colorId);

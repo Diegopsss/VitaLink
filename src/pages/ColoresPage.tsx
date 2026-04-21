@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import baseAprender from '../assets/Images/Backgrounds/base_aprender.svg'
@@ -11,6 +11,7 @@ import redButton from '../assets/Images/Buttons/red_button.png'
 import azulButton from '../assets/Images/Buttons/azul_button.png'
 import MenuTab from '../components/MenuTab'
 import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
+import { setColor, turnOff, getPiUrl } from '../services/piApi'
 import fraseDiapositiva9Audio from '../assets/Audios/palabras/colores/frase_diapositiva 9.m4a'
 import amarilloAudio from '../assets/Audios/palabras/colores/amarillo_palabras.m4a'
 import azulAudio from '../assets/Audios/palabras/colores/azul_palabras.m4a'
@@ -20,6 +21,7 @@ import verdeAudio from '../assets/Audios/palabras/colores/verde_palabras.m4a'
 function ColoresPage() {
   const [currentView, setCurrentView] = useState<'initial' | 'colorButtons'>('initial')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const ledOffTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   
   // Acceder a la música de fondo y bajar el volumen para esta página
   const { setVolume } = useBackgroundMusic()
@@ -59,6 +61,14 @@ function ColoresPage() {
     audio.play().catch(error => {
       console.log(`Error reproduciendo audio ${colorName}:`, error)
     })
+
+    if (getPiUrl()) {
+      if (ledOffTimerRef.current) clearTimeout(ledOffTimerRef.current)
+      setColor(colorName.toLowerCase()).catch(() => {})
+      ledOffTimerRef.current = setTimeout(() => {
+        turnOff().catch(() => {})
+      }, 3000)
+    }
   }
 
   useEffect(() => {
