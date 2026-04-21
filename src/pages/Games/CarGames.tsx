@@ -15,7 +15,6 @@ import { useBackgroundMusic } from '../../contexts/BackgroundMusicContext'
 import carGameAudio from '../../assets/Audios/juegos/Carro juego/mizanstock-bmw-xm-car-sound-2023-165995.mp3'
 import carroCasaAudio from '../../assets/Audios/juegos/Carro juego/carro casa_juegos.m4a'
 import carroTiendaAudio from '../../assets/Audios/juegos/Carro juego/carro tienda_juegos.m4a'
-import carroEscuelaAudio from '../../assets/Audios/juegos/Carro juego/carro escuela_juegos.m4a'
 import carroParqueAudio from '../../assets/Audios/juegos/Carro juego/carro parque _juegos.m4a'
 import instrucciones1Audio from '../../assets/Audios/juegos/Carro juego/carro instrucciones 1_juegos.m4a'
 
@@ -234,7 +233,7 @@ function CarGames() {
         if (gameStarted && gameAudioRef.current) {
             const playAudio = async () => {
                 try {
-                    gameAudioRef.current.volume = 0.03 // Volumen audible pero de fondo (3%)
+                    gameAudioRef.current!.volume = 0.03 // Volumen audible pero de fondo (3%)
                     await gameAudioRef.current!.play()
                     console.log('Audio del juego iniciado')
                 } catch (error) {
