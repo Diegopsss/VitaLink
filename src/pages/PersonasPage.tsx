@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { getMasterVolume } from '../services/audioVolume'
 import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import baseAprender from '../assets/Images/Backgrounds/base_aprender.svg'
 import fondoGeneral from '../assets/Images/Backgrounds/fondo_general.svg'
@@ -73,6 +74,7 @@ function PersonasPage() {
     }
     
     const audio = new Audio(audioFile)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log(`Error reproduciendo audio ${personName}:`, error)
     })
@@ -84,6 +86,7 @@ function PersonasPage() {
       const timer = setTimeout(() => {
         // Reproducir audio 'frase_diapositiva 13'
         const audio = new Audio(fraseDiapositiva13Audio)
+        audio.volume = getMasterVolume()
         audio.play().catch(error => {
           console.log('Error reproduciendo audio frase diapositiva 13:', error)
         })
@@ -95,6 +98,7 @@ function PersonasPage() {
           // Reproducir audio 'ellos son papás' cuando salgan los dos papas juntos
           setTimeout(() => {
             const audio2 = new Audio(ellosSonPapasAudio)
+            audio2.volume = getMasterVolume()
             audio2.play().catch(error => {
               console.log('Error reproduciendo audio ellos son papás:', error)
             })
@@ -103,6 +107,7 @@ function PersonasPage() {
             audio2.addEventListener('ended', () => {
               setTimeout(() => {
                 const audio3 = new Audio(mamaAudio)
+                audio3.volume = getMasterVolume()
                 audio3.play().catch(error => {
                   console.log('Error reproduciendo audio mamá:', error)
                 })
@@ -115,6 +120,7 @@ function PersonasPage() {
                 audio3.addEventListener('ended', () => {
                   setTimeout(() => {
                     const audio4 = new Audio(papaAudio)
+                    audio4.volume = getMasterVolume()
                     audio4.play().catch(error => {
                       console.log('Error reproduciendo audio papá:', error)
                     })
@@ -151,6 +157,7 @@ function PersonasPage() {
       // Reproducir audio 'extra bebé' cuando entre a la vista baby
       const timer = setTimeout(() => {
         const audio = new Audio(extraBebeAudio)
+        audio.volume = getMasterVolume()
         audio.play().catch(error => {
           console.log('Error reproduciendo audio extra bebé:', error)
         })
@@ -162,6 +169,7 @@ function PersonasPage() {
           // Reproducir audio 'ellos son los abuelos' cuando salgan los abuelos juntos
           setTimeout(() => {
             const audio2 = new Audio(ellosSonAbuelosAudio)
+            audio2.volume = getMasterVolume()
             audio2.play().catch(error => {
               console.log('Error reproduciendo audio ellos son los abuelos:', error)
             })
@@ -170,6 +178,7 @@ function PersonasPage() {
             audio2.addEventListener('ended', () => {
               setTimeout(() => {
                 const audio3 = new Audio(abuelaAudio)
+                audio3.volume = getMasterVolume()
                 audio3.play().catch(error => {
                   console.log('Error reproduciendo audio abuela:', error)
                 })
@@ -182,6 +191,7 @@ function PersonasPage() {
                 audio3.addEventListener('ended', () => {
                   setTimeout(() => {
                     const audio4 = new Audio(abueloAudio)
+                    audio4.volume = getMasterVolume()
                     audio4.play().catch(error => {
                       console.log('Error reproduciendo audio abuelo:', error)
                     })
@@ -213,6 +223,7 @@ function PersonasPage() {
           // Reproducir audio 'todos familia' cuando entre a la vista family
           setTimeout(() => {
             const audio = new Audio(todosFamiliaAudio)
+            audio.volume = getMasterVolume()
             audio.play().catch(error => {
               console.log('Error reproduciendo audio todos familia:', error)
             })

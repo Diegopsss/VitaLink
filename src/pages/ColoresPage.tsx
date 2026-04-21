@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import baseAprender from '../assets/Images/Backgrounds/base_aprender.svg'
@@ -11,6 +11,8 @@ import redButton from '../assets/Images/Buttons/red_button.png'
 import azulButton from '../assets/Images/Buttons/azul_button.png'
 import MenuTab from '../components/MenuTab'
 import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
+import { setColor, turnOff, getPiUrl } from '../services/piApi'
+import { getMasterVolume } from '../services/audioVolume'
 import fraseDiapositiva9Audio from '../assets/Audios/palabras/colores/frase_diapositiva 9.m4a'
 import amarilloAudio from '../assets/Audios/palabras/colores/amarillo_palabras.m4a'
 import azulAudio from '../assets/Audios/palabras/colores/azul_palabras.m4a'
@@ -27,8 +29,12 @@ import yaCasiExtra from '../assets/Audios/extras_perder/ya casi_extras.m4a'
 function ColoresPage() {
   const [currentView, setCurrentView] = useState<'initial' | 'colorButtons'>('initial')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+<<<<<<< HEAD
   const [completedColors, setCompletedColors] = useState<Set<string>>(new Set())
   const [gameCompleted, setGameCompleted] = useState(false)
+=======
+  const ledOffTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+>>>>>>> 5803efb9b4c5cd70c60d72d2115f51d93abbf522
   
   // Acceder a la música de fondo y bajar el volumen para esta página
   const { setVolume } = useBackgroundMusic()
@@ -87,10 +93,12 @@ function ColoresPage() {
     }
     
     const audio = new Audio(audioFile)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log(`Error reproduciendo audio ${colorName}:`, error)
     })
 
+<<<<<<< HEAD
     // Verificar si ya se había completado este color (equivocación)
     if (completedColors.has(colorName)) {
       playRandomLoseAudio()
@@ -109,6 +117,14 @@ function ColoresPage() {
     if (isComplete && !gameCompleted) {
       setGameCompleted(true)
       playRandomWinAudio()
+=======
+    if (getPiUrl()) {
+      if (ledOffTimerRef.current) clearTimeout(ledOffTimerRef.current)
+      setColor(colorName.toLowerCase()).catch(() => {})
+      ledOffTimerRef.current = setTimeout(() => {
+        turnOff().catch(() => {})
+      }, 3000)
+>>>>>>> 5803efb9b4c5cd70c60d72d2115f51d93abbf522
     }
   }
 

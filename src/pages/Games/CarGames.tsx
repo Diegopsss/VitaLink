@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { getMasterVolume } from '../../services/audioVolume'
 import fondoCarro from '../../assets/Images/Backgrounds/fondos juegos/fondo_carro.svg'
 import cocheJuego from '../../assets/Images/iconos_juego/Carro/coche_juego.png'
 import flechaIzquierda from '../../assets/Images/iconos_juego/Carro/flecha_izquierda.png'
@@ -81,7 +82,7 @@ function CarGames() {
         
         // Crear y reproducir nuevo audio específico
         const audio = new Audio(audioFile)
-        audio.volume = 0.5 // Volumen más alto para los audios de lugares
+        audio.volume = getMasterVolume() * 0.5
         currentLocationAudioRef.current = audio // Guardar referencia
         
         audio.play().catch(error => {
@@ -146,6 +147,7 @@ function CarGames() {
         // Bajar el volumen de la música de fondo a casi nada
         setVolume(0.02) // 2% de volumen - casi inaudible
         
+<<<<<<< HEAD
         // Reproducir audio de instrucciones solo una vez al entrar
         if (!instructionsPlayed) {
             const audio = new Audio(instrucciones1Audio)
@@ -157,6 +159,14 @@ function CarGames() {
             // Marcar que las instrucciones ya se reprodujeron
             setInstructionsPlayed(true)
         }
+=======
+        // Reproducir audio de instrucciones al entrar
+        const audio = new Audio(instrucciones1Audio)
+        audio.volume = getMasterVolume() * 0.6
+        audio.play().catch(error => {
+            console.log('Error reproduciendo instrucciones:', error)
+        })
+>>>>>>> 5803efb9b4c5cd70c60d72d2115f51d93abbf522
         
         // Cleanup: restaurar volumen al salir
         return () => {
@@ -326,7 +336,11 @@ function CarGames() {
         if (gameStarted && gameAudioRef.current) {
             const playAudio = async () => {
                 try {
+<<<<<<< HEAD
                     gameAudioRef.current!.volume = 0.03 // Volumen audible pero de fondo (3%)
+=======
+                    gameAudioRef.current!.volume = getMasterVolume() * 0.03
+>>>>>>> 5803efb9b4c5cd70c60d72d2115f51d93abbf522
                     await gameAudioRef.current!.play()
                     console.log('Audio del juego iniciado')
                 } catch (error) {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { getMasterVolume } from '../../services/audioVolume'
 import fondoPagina56 from '../../assets/Images/Backgrounds/pagina_5,6.svg'
 import texto51Globo from '../../assets/Images/Texts/texto_5_1_globo.png'
 import texto52Globo from '../../assets/Images/Texts/texto_5_2_globo.png'
@@ -19,6 +20,7 @@ function CharacterPresentationPage() {
   useEffect(() => {
     // Reproducir primer audio "hola nuevo amigo" al cargar
     const audio1 = new Audio(holaNuevoAmigoAudio)
+    audio1.volume = getMasterVolume()
     audio1.play().catch(error => {
       console.log('Error reproduciendo audio hola nuevo amigo:', error)
     })
@@ -29,6 +31,7 @@ function CharacterPresentationPage() {
       
       // Reproducir segundo audio "comencemos" inmediatamente
       const audio2 = new Audio(comencemosAudio)
+      audio2.volume = getMasterVolume()
       audio2.play().catch(error => {
         console.log('Error reproduciendo audio comencemos:', error)
       })

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { getMasterVolume } from '../services/audioVolume'
 import baseAprender from '../assets/Images/Backgrounds/base_aprender.svg'
 import fondoGeneral from '../assets/Images/Backgrounds/fondo_general.svg'
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
@@ -69,7 +70,8 @@ function TransportePage() {
     
     // Primero reproducir el audio del transporte
     const audio = new Audio(audioFile)
-    
+    audio.volume = getMasterVolume()
+
     // Si es ambulancia, ajustar la duración a 3 segundos
     if (transportName === 'Ambulancia') {
       audio.addEventListener('loadedmetadata', () => {
@@ -91,7 +93,8 @@ function TransportePage() {
     // Cuando termine el audio del transporte, reproducir el efecto específico
     audio.addEventListener('ended', () => {
       const efectoAudio = new Audio(efectoFile)
-      
+      efectoAudio.volume = getMasterVolume()
+
       // Si es ambulancia, recortar el efecto a exactamente 4 segundos
       if (transportName === 'Ambulancia') {
         efectoAudio.addEventListener('loadedmetadata', () => {
@@ -113,6 +116,7 @@ function TransportePage() {
     const timer = setTimeout(() => {
       // Reproducir audio 'frase_diapositiva 21' antes del cambio de página
       const audio1 = new Audio(fraseDiapositiva21Audio)
+      audio1.volume = getMasterVolume()
       audio1.play().catch(error => {
         console.log('Error reproduciendo audio frase diapositiva 21:', error)
       })
@@ -124,6 +128,7 @@ function TransportePage() {
         // Reproducir audio 'frase_diapositiva 22' después del cambio de página
         setTimeout(() => {
           const audio2 = new Audio(fraseDiapositiva22Audio)
+          audio2.volume = getMasterVolume()
           audio2.play().catch(error => {
             console.log('Error reproduciendo audio frase diapositiva 22:', error)
           })

@@ -1,4 +1,5 @@
 import fondoVasos from '../../assets/Images/Backgrounds/fondos juegos/fondo_vasos.svg';
+import { getMasterVolume } from '../../services/audioVolume';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import type { PanInfo } from 'framer-motion';
@@ -89,12 +90,14 @@ function CupBalls() {
         
         // Reproducir audios de instrucciones en secuencia
         const audio1 = new Audio(instrucciones1Audio);
+        audio1.volume = getMasterVolume();
         audio1.play().catch(error => {
             console.log('Error reproduciendo audio instrucciones 1:', error);
         });
-        
+
         audio1.addEventListener('ended', () => {
             const audio2 = new Audio(instrucciones2Audio);
+            audio2.volume = getMasterVolume();
             audio2.play().catch(error => {
                 console.log('Error reproduciendo audio instrucciones 2:', error);
             });
@@ -120,6 +123,7 @@ function CupBalls() {
         const ball = balls.find(b => b.id === ballId);
         if (ball) {
             const audio = new Audio(ball.color === 'azul' ? azulAudio : naranjaAudio);
+            audio.volume = getMasterVolume();
             audio.play().catch(error => {
                 console.log('Error reproduciendo audio de color:', error);
             });

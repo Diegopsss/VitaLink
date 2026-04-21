@@ -25,6 +25,7 @@ import NotFoundPage from './pages/NotFoundPage'
 import MemoryGame from './pages/Games/Memorygame'
 import ColorsGame from './pages/Games/ColorsGame'
 import CupBalls from './pages/Games/CupBalls'
+import LedControlPage from './pages/LedControlPage'
 import { BackgroundMusicProvider } from './contexts/BackgroundMusicContext'
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
         <Route path = "/memory-game" element={<ProtectedRoute><MemoryGame/></ProtectedRoute>}/>
         <Route path = "/colors-game" element={<ProtectedRoute><ColorsGame /></ProtectedRoute>}/>
         <Route path = "/cup-balls" element={<ProtectedRoute><CupBalls /></ProtectedRoute>}/>
+        <Route path="/led" element={<ProtectedRoute><LedControlPage /></ProtectedRoute>} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

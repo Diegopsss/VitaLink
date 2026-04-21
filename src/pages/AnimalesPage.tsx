@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { getMasterVolume } from '../services/audioVolume'
 import baseAprender from '../assets/Images/Backgrounds/base_aprender.svg'
 import fondoGeneral from '../assets/Images/Backgrounds/fondo_general.svg'
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
@@ -80,6 +81,7 @@ function AnimalesPage() {
     const timer = setTimeout(() => {
       // Reproducir audio 'frase_diapositiva 11' antes del cambio de página
       const audio1 = new Audio(fraseDiapositiva11Audio)
+      audio1.volume = getMasterVolume()
       audio1.play().catch(error => {
         console.log('Error reproduciendo audio frase diapositiva 11:', error)
       })
@@ -91,6 +93,7 @@ function AnimalesPage() {
         // Reproducir audio 'haz clic_animales' después del cambio de página
         setTimeout(() => {
           const audio2 = new Audio(hazClicAudio)
+          audio2.volume = getMasterVolume()
           audio2.play().catch(error => {
             console.log('Error reproduciendo audio haz clic animales:', error)
           })
@@ -164,6 +167,7 @@ function AnimalesPage() {
     
     // Reproducir audio del animal primero
     const audio = new Audio(audioFile)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log(`Error reproduciendo audio ${animalName}:`, error)
     })
@@ -172,7 +176,7 @@ function AnimalesPage() {
     audio.addEventListener('ended', () => {
       setTimeout(() => {
         const efecto = new Audio(efectoFile)
-        efecto.volume = efectosConfig.volumen
+        efecto.volume = getMasterVolume() * efectosConfig.volumen
         
         // Obtener la duración específica para este animal
         const duracionAnimal = efectosConfig.duraciones[animalName as keyof typeof efectosConfig.duraciones]

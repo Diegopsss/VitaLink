@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { getMasterVolume } from '../services/audioVolume'
 import baseAprender from '../assets/Images/Backgrounds/base_aprender.svg'
 import fondoGeneral from '../assets/Images/Backgrounds/fondo_general.svg'
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
@@ -102,6 +103,7 @@ function MusicaPage() {
     
     // Reproducir audio del instrumento primero
     const audio = new Audio(audioFile)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log(`Error reproduciendo audio ${musicName}:`, error)
     })
@@ -110,7 +112,7 @@ function MusicaPage() {
     audio.addEventListener('ended', () => {
       setTimeout(() => {
         const efecto = new Audio(efectoFile)
-        efecto.volume = efectosConfig.volumen
+        efecto.volume = getMasterVolume() * efectosConfig.volumen
         
         // Obtener la duración específica para este instrumento
         const duracionInstrumento = efectosConfig.duraciones[musicName as keyof typeof efectosConfig.duraciones]
@@ -143,6 +145,7 @@ function MusicaPage() {
     const timer = setTimeout(() => {
       // Reproducir audio 'frase_diapositiva 23' antes del cambio de página
       const audio1 = new Audio(fraseDiapositiva23Audio)
+      audio1.volume = getMasterVolume()
       audio1.play().catch(error => {
         console.log('Error reproduciendo audio frase diapositiva 23:', error)
       })
@@ -154,6 +157,7 @@ function MusicaPage() {
         // Reproducir audio 'frase_diapositiva 24' después del cambio de página
         setTimeout(() => {
           const audio2 = new Audio(fraseDiapositiva24Audio)
+          audio2.volume = getMasterVolume()
           audio2.play().catch(error => {
             console.log('Error reproduciendo audio frase diapositiva 24:', error)
           })
