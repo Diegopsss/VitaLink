@@ -71,7 +71,7 @@ function ComidaPage() {
 
   useEffect(() => {
     // Esperar 1 segundo para reducir el tiempo de espera
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       // Reproducir audio 'frase_diapositiva 18' antes del cambio de página
       const audio1 = new Audio(fraseDiapositiva18Audio)
       audio1.play().catch(error => {
@@ -96,11 +96,14 @@ function ComidaPage() {
 
       return () => {
         audio1.removeEventListener('ended', () => {})
+        audio1.pause()
       }
     }, 1000) // Reducir a 1 segundo
 
-    return () => {}
-  }, [])
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [fraseDiapositiva18Audio, fraseDiapositiva19Audio])
 
   useEffect(() => {
     if (clickedItem) {

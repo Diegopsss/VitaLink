@@ -140,7 +140,7 @@ function MusicaPage() {
 
   useEffect(() => {
     // Esperar 2 segundos para que termine el audio de música
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       // Reproducir audio 'frase_diapositiva 23' antes del cambio de página
       const audio1 = new Audio(fraseDiapositiva23Audio)
       audio1.play().catch(error => {
@@ -162,11 +162,14 @@ function MusicaPage() {
 
       return () => {
         audio1.removeEventListener('ended', () => {})
+        audio1.pause()
       }
     }, 2000) // Esperar 2 segundos para que sea perceptible
 
-    return () => {}
-  }, [])
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [fraseDiapositiva23Audio, fraseDiapositiva24Audio])
 
   useEffect(() => {
     if (clickedMusic) {

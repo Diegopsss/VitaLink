@@ -30,7 +30,12 @@ function GamesPage() {
     audio.play().catch(error => {
       console.log('Error reproduciendo audio frase interfaz_juegos:', error)
     })
-  }, [])
+
+    // Cleanup para detener el audio al salir
+    return () => {
+      audio.pause()
+    }
+  }, [fraseInterfazJuegosAudio])
 
   // Datos de los 4 juegos posibles
   const games = [

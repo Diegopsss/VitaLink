@@ -14,7 +14,6 @@ import MenuTab from '../components/MenuTab'
 import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import fraseDiapositiva21Audio from '../assets/Audios/palabras/transportes/frase_diapositiva 21.m4a'
 import fraseDiapositiva22Audio from '../assets/Audios/palabras/transportes/frase_diapositiva 22.m4a'
-import transportePrincipalAudio from '../assets/Audios/palabras/words/transporte_diapositiva 8.m4a'
 import ambulanciaAudio from '../assets/Audios/palabras/transportes/ambulancia_transporte.m4a'
 import avionAudio from '../assets/Audios/palabras/transportes/avion_transporte.m4a'
 import carroAudio from '../assets/Audios/palabras/transportes/carro_transporte.m4a'
@@ -111,7 +110,7 @@ function TransportePage() {
 
   useEffect(() => {
     // Esperar 2 segundos para que termine el audio de transporte
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       // Reproducir audio 'frase_diapositiva 21' antes del cambio de página
       const audio1 = new Audio(fraseDiapositiva21Audio)
       audio1.play().catch(error => {
@@ -133,11 +132,14 @@ function TransportePage() {
 
       return () => {
         audio1.removeEventListener('ended', () => {})
+        audio1.pause()
       }
     }, 2000) // Esperar 2 segundos para que sea perceptible
 
-    return () => {}
-  }, [])
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [fraseDiapositiva21Audio, fraseDiapositiva22Audio])
 
   useEffect(() => {
     if (clickedTransport) {

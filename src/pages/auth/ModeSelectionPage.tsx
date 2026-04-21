@@ -27,10 +27,15 @@ function ModeSelectionPage() {
     audio.play().catch(error => {
       console.log('Error reproduciendo audio diapositiva 7:', error)
     })
-  }, [])
+
+    // Cleanup para detener el audio al salir
+    return () => {
+      audio.pause()
+    }
+  }, [diapositiva7Audio])
 
   // Función para reproducir audio de juegos
-  const handleJuegosClick = (e) => {
+  const handleJuegosClick = (e: React.MouseEvent) => {
     e.preventDefault()
     const audio = new Audio(juegosAudio)
     audio.play().catch(error => {
@@ -42,7 +47,7 @@ function ModeSelectionPage() {
   }
 
   // Función para reproducir audio de cuentos
-  const handleCuentosClick = (e) => {
+  const handleCuentosClick = (e: React.MouseEvent) => {
     e.preventDefault()
     const audio = new Audio(cuentosAudio)
     audio.play().catch(error => {
@@ -54,7 +59,7 @@ function ModeSelectionPage() {
   }
 
   // Función para reproducir audio de palabras
-  const handlePalabrasClick = (e) => {
+  const handlePalabrasClick = (e: React.MouseEvent) => {
     e.preventDefault()
     const audio = new Audio(palabrasAudio)
     audio.play().catch(error => {

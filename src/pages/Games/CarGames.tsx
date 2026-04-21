@@ -15,9 +15,10 @@ import { useBackgroundMusic } from '../../contexts/BackgroundMusicContext'
 import carGameAudio from '../../assets/Audios/juegos/Carro juego/mizanstock-bmw-xm-car-sound-2023-165995.mp3'
 import carroCasaAudio from '../../assets/Audios/juegos/Carro juego/carro casa_juegos.m4a'
 import carroTiendaAudio from '../../assets/Audios/juegos/Carro juego/carro tienda_juegos.m4a'
-import carroEscuelaAudio from '../../assets/Audios/juegos/Carro juego/carro escuela_juegos.m4a'
 import carroParqueAudio from '../../assets/Audios/juegos/Carro juego/carro parque _juegos.m4a'
 import instrucciones1Audio from '../../assets/Audios/juegos/Carro juego/carro instrucciones 1_juegos.m4a'
+import muyBienExtra from '../../assets/Audios/extras_ganar/muy bien_extra.m4a'
+import noTePreocupes from '../../assets/Audios/extras_perder/no te preocupes_extras.m4a'
 
 import '../../styles/App.css'
 
@@ -40,6 +41,7 @@ function CarGames() {
     const [showIniciamos, setShowIniciamos] = useState(false)
     const [gameStarted, setGameStarted] = useState(false)
     const [showConfetti, setShowConfetti] = useState(false)
+    const [instructionsPlayed, setInstructionsPlayed] = useState(false)
     
     // Acceder a la música de fondo global y controlar volumen
     const { setVolume } = useBackgroundMusic()
@@ -50,18 +52,21 @@ function CarGames() {
     // Referencia para detener audios anteriores y evitar cruzados
     const currentLocationAudioRef = useRef<HTMLAudioElement | null>(null)
 
-    // Función para reproducir audio específico según el lugar
+    // Función para reproducir audio específico según el icono que aparece
     const playLocationAudio = (icon: string) => {
         let audioFile: string
         
         switch (icon) {
             case iconoCasa:
+                // Reproducir audio específico de casa
                 audioFile = carroCasaAudio
                 break
             case iconoTienda:
+                // Reproducir audio específico de tienda
                 audioFile = carroTiendaAudio
                 break
             case iconoParque:
+                // Reproducir audio específico de parque
                 audioFile = carroParqueAudio
                 break
             default:
@@ -74,13 +79,13 @@ function CarGames() {
             currentLocationAudioRef.current.currentTime = 0
         }
         
-        // Crear y reproducir nuevo audio
+        // Crear y reproducir nuevo audio específico
         const audio = new Audio(audioFile)
         audio.volume = 0.5 // Volumen más alto para los audios de lugares
         currentLocationAudioRef.current = audio // Guardar referencia
         
         audio.play().catch(error => {
-            console.log(`Error reproduciendo audio del lugar:`, error)
+            console.log(`Error reproduciendo audio específico del lugar:`, error)
         })
         
         // Limpiar referencia cuando termine
@@ -88,6 +93,40 @@ function CarGames() {
             if (currentLocationAudioRef.current === audio) {
                 currentLocationAudioRef.current = null
             }
+        })
+    }
+
+    // Función para reproducir audio de ganar (solo muy bien)
+    const playRandomWinAudio = () => {
+        return new Promise<void>((resolve) => {
+            const audio = new Audio(muyBienExtra)
+            audio.volume = 0.6
+            
+            audio.addEventListener('ended', () => {
+                resolve()
+            })
+            
+            audio.play().catch(error => {
+                console.log('Error reproduciendo audio de ganar:', error)
+                resolve() // Resolver igual para continuar el juego
+            })
+        })
+    }
+
+    // Función para reproducir audio de perder (solo no te preocupes)
+    const playRandomLoseAudio = () => {
+        return new Promise<void>((resolve) => {
+            const audio = new Audio(noTePreocupes)
+            audio.volume = 0.6
+            
+            audio.addEventListener('ended', () => {
+                resolve()
+            })
+            
+            audio.play().catch(error => {
+                console.log('Error reproduciendo audio de perder:', error)
+                resolve() // Resolver igual para continuar el juego
+            })
         })
     }
 
@@ -107,18 +146,23 @@ function CarGames() {
         // Bajar el volumen de la música de fondo a casi nada
         setVolume(0.02) // 2% de volumen - casi inaudible
         
-        // Reproducir audio de instrucciones al entrar
-        const audio = new Audio(instrucciones1Audio)
-        audio.volume = 0.6 // Volumen alto para instrucciones
-        audio.play().catch(error => {
-            console.log('Error reproduciendo instrucciones:', error)
-        })
+        // Reproducir audio de instrucciones solo una vez al entrar
+        if (!instructionsPlayed) {
+            const audio = new Audio(instrucciones1Audio)
+            audio.volume = 0.6 // Volumen alto para instrucciones
+            audio.play().catch(error => {
+                console.log('Error reproduciendo instrucciones:', error)
+            })
+            
+            // Marcar que las instrucciones ya se reprodujeron
+            setInstructionsPlayed(true)
+        }
         
         // Cleanup: restaurar volumen al salir
         return () => {
             setVolume(0.05) // Restaurar al volumen normal bajo
         }
-    }, [setVolume])
+    }, [setVolume, instructionsPlayed])
 
     useEffect(() => {
         let animationFrame: number
@@ -176,7 +220,7 @@ function CarGames() {
                 const updated = prev
                     .map(obstacle => ({
                         ...obstacle,
-                        progress: obstacle.progress + 0.083
+                        progress: obstacle.progress + 0.30
                     }))
                     .filter(obstacle => obstacle.progress < 85)
 
@@ -185,25 +229,73 @@ function CarGames() {
                     const obstacleX = lastObstacle.lane * (lastObstacle.progress / 100)
                     const distance = Math.abs(carPosition - obstacleX)
                     
-                    if (distance < 150) {
-                        setShowConfetti(true)
-                        setTimeout(() => setShowConfetti(false), 2000)
+                    // Función asíncrona para manejar el resultado y generar siguiente obstáculo
+                    const handleObstacleResult = async () => {
+                        if (distance < 50) {
+                            // El jugador realmente llegó al obstáculo - reproducir audio aleatorio de ganar
+                            await playRandomWinAudio()
+                            setShowConfetti(true)
+                            setTimeout(() => setShowConfetti(false), 2000)
+                            
+                            // Generar siguiente obstáculo después del audio
+                            setTimeout(() => {
+                                const randomLane = lanes[Math.floor(Math.random() * lanes.length)]
+                                const randomIcon = obstacleIcons[Math.floor(Math.random() * obstacleIcons.length)]
+                                const newObstacle: Obstacle = {
+                                    id: obstacleIdCounter,
+                                    icon: randomIcon,
+                                    lane: randomLane.finalX,
+                                    progress: 0
+                                }
+                                
+                                // Reproducir audio específico cuando spawnea el nuevo icono
+                                playLocationAudio(randomIcon)
+                                
+                                setObstacleIdCounter(prev => prev + 1)
+                                setObstacles([newObstacle])
+                            }, 500) // 500ms de delay después del audio de feedback
+                        } else if (distance < 150) {
+                            // El jugador chocó con el obstáculo - reproducir audio de perder
+                            await playRandomLoseAudio()
+                            
+                            // Generar siguiente obstáculo después del audio
+                            setTimeout(() => {
+                                const randomLane = lanes[Math.floor(Math.random() * lanes.length)]
+                                const randomIcon = obstacleIcons[Math.floor(Math.random() * obstacleIcons.length)]
+                                const newObstacle: Obstacle = {
+                                    id: obstacleIdCounter,
+                                    icon: randomIcon,
+                                    lane: randomLane.finalX,
+                                    progress: 0
+                                }
+                                
+                                // Reproducir audio específico cuando spawnea el nuevo icono
+                                playLocationAudio(randomIcon)
+                                
+                                setObstacleIdCounter(prev => prev + 1)
+                                setObstacles([newObstacle])
+                            }, 500) // 500ms de delay después del audio de feedback
+                        } else {
+                            // El jugador está en la posición correcta pero no llegó al obstáculo - no reproducir audio
+                            // Solo generar siguiente obstáculo sin audio de feedback
+                            const randomLane = lanes[Math.floor(Math.random() * lanes.length)]
+                            const randomIcon = obstacleIcons[Math.floor(Math.random() * obstacleIcons.length)]
+                            const newObstacle: Obstacle = {
+                                id: obstacleIdCounter,
+                                icon: randomIcon,
+                                lane: randomLane.finalX,
+                                progress: 0
+                            }
+                            
+                            // Reproducir audio específico cuando spawnea el nuevo icono
+                            playLocationAudio(randomIcon)
+                            
+                            setObstacleIdCounter(prev => prev + 1)
+                            setObstacles([newObstacle])
+                        }
                     }
                     
-                    const randomLane = lanes[Math.floor(Math.random() * lanes.length)]
-                    const randomIcon = obstacleIcons[Math.floor(Math.random() * obstacleIcons.length)]
-                    const newObstacle: Obstacle = {
-                        id: obstacleIdCounter,
-                        icon: randomIcon,
-                        lane: randomLane.finalX,
-                        progress: 0
-                    }
-                    
-                    // Reproducir audio específico cuando spawnea el nuevo icono
-                    playLocationAudio(randomIcon)
-                    
-                    setObstacleIdCounter(prev => prev + 1)
-                    return [newObstacle]
+                    handleObstacleResult()
                 }
 
                 return updated
@@ -234,7 +326,7 @@ function CarGames() {
         if (gameStarted && gameAudioRef.current) {
             const playAudio = async () => {
                 try {
-                    gameAudioRef.current.volume = 0.03 // Volumen audible pero de fondo (3%)
+                    gameAudioRef.current!.volume = 0.03 // Volumen audible pero de fondo (3%)
                     await gameAudioRef.current!.play()
                     console.log('Audio del juego iniciado')
                 } catch (error) {

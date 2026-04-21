@@ -4,7 +4,20 @@ import { motion } from 'framer-motion'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
 import returnButton from '../../assets/Images/Buttons/return_button.png'
 import MenuTab from '../../components/MenuTab'
+import { useBackgroundMusic } from '../../contexts/BackgroundMusicContext'
 import '../../styles/App.css'
+
+// Importar todos los audios del cuento 4 enumerados
+import unoCuento4Audio from '../../assets/Audios/cuentos/cuento 4/uno_cuento 4.m4a'
+import dosCuento4Audio from '../../assets/Audios/cuentos/cuento 4/dos_cuento 4.m4a'
+import tresCuento4Audio from '../../assets/Audios/cuentos/cuento 4/tres_cuento 4.m4a'
+import cuatroCuento4Audio from '../../assets/Audios/cuentos/cuento 4/cuatro_cuento 4.m4a'
+import cincoCuento4Audio from '../../assets/Audios/cuentos/cuento 4/cinco_cuento 4.m4a'
+import seisCuento4Audio from '../../assets/Audios/cuentos/cuento 4/seis_cuento 4.m4a'
+import sieteCuento4Audio from '../../assets/Audios/cuentos/cuento 4/siete_cuento 4.m4a'
+import ochoCuento4Audio from '../../assets/Audios/cuentos/cuento 4/ocho_cuento 4.m4a'
+import nueveCuento4Audio from '../../assets/Audios/cuentos/cuento 4/nueve_cuento 4.m4a'
+import diezCuento4Audio from '../../assets/Audios/cuentos/cuento 4/diez_cuento 4.m4a'
 
 // Importar imágenes de la tortuga y día lluvioso en orden
 import tortuga1 from '../../assets/Images/paginas_cuentos/tortuga_y_dia_lluvioso/tor_1.svg'
@@ -22,6 +35,9 @@ function TortugaSabiaPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState(0)
   const navigate = useNavigate()
+  
+  // Acceder a la música de fondo global y controlar volumen
+  const { setVolume } = useBackgroundMusic()
 
   // Array de imágenes en orden (archivo final al inicio)
   const tortugaImages = [
@@ -29,22 +45,74 @@ function TortugaSabiaPage() {
     tortuga5, tortuga6, tortuga7, tortuga8, tortuga9
   ]
 
-  // Timer para cambio automático con tiempos diferenciados
-  useEffect(() => {
-    // 5 segundos para la imagen de presentación (índice 0), 20 para las demás
-    const timerDuration = currentImage === 0 ? 5000 : 20000
-    
-    const timer = setTimeout(() => {
-      if (currentImage < tortugaImages.length - 1) {
-        setCurrentImage(currentImage + 1)
-      } else {
-        // Si está en la última imagen, redirigir a selección de cuentos
-        navigate('/stories')
-      }
-    }, timerDuration)
+  // Array de audios correspondientes a cada página
+  const tortugaAudios = [
+    unoCuento4Audio,  // Página 0 (presentación) → uno_cuento4.m4a
+    dosCuento4Audio,  // Página 1 → dos_cuento4.m4a
+    tresCuento4Audio,  // Página 2 → tres_cuento4.m4a
+    cuatroCuento4Audio,  // Página 3 → cuatro_cuento4.m4a
+    cincoCuento4Audio,  // Página 4 → cinco_cuento4.m4a
+    seisCuento4Audio,  // Página 5 → seis_cuento4.m4a
+    sieteCuento4Audio,  // Página 6 → siete_cuento4.m4a
+    ochoCuento4Audio,  // Página 7 → ocho_cuento4.m4a
+    nueveCuento4Audio,  // Página 8 → nueve_cuento4.m4a
+    diezCuento4Audio  // Página 9 → diez_cuento4.m4a
+  ]
 
-    return () => clearTimeout(timer)
-  }, [currentImage, navigate])
+  // Efecto para manejar la reproducción de audio y cambio automático
+  useEffect(() => {
+    // Bajar el volumen de la música de fondo a casi nada (solo en la primera carga)
+    if (currentImage === 0) {
+      setVolume(0.02) // 2% de volumen - casi inaudible (igual que en juegos)
+    }
+
+    // Obtener el audio correspondiente a la página actual
+    const audioSrc = tortugaAudios[currentImage]
+    if (audioSrc) {
+      const audio = new Audio(audioSrc)
+      audio.play().catch(error => {
+        console.error('Error reproduciendo audio:', error)
+        // Si hay error, cambiar después de 3 segundos
+        setTimeout(() => {
+          if (currentImage < tortugaImages.length - 1) {
+            setCurrentImage(currentImage + 1)
+          } else {
+            navigate('/stories')
+          }
+        }, 3000)
+      })
+
+      audio.addEventListener('ended', () => {
+        if (currentImage < tortugaImages.length - 1) {
+          setCurrentImage(currentImage + 1)
+        } else {
+          navigate('/stories')
+        }
+      })
+
+      return () => {
+        audio.pause()
+        audio.removeEventListener('ended', () => {})
+      }
+    } else {
+      // Si no hay audio, cambiar después de 3 segundos
+      const timer = setTimeout(() => {
+        if (currentImage < tortugaImages.length - 1) {
+          setCurrentImage(currentImage + 1)
+        } else {
+          navigate('/stories')
+        }
+      }, 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [currentImage, navigate, tortugaAudios, setVolume])
+
+  // Cleanup para restaurar volumen al salir
+  useEffect(() => {
+    return () => {
+      setVolume(0.05) // Restaurar al volumen normal bajo
+    }
+  }, [setVolume])
 
   // Función para manejar navegación manual (resetear timer)
   const handleNext = () => {

@@ -77,7 +77,7 @@ function AnimalesPage() {
 
   useEffect(() => {
     // Esperar a que termine el audio de animales (3 segundos de retraso)
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       // Reproducir audio 'frase_diapositiva 11' antes del cambio de página
       const audio1 = new Audio(fraseDiapositiva11Audio)
       audio1.play().catch(error => {
@@ -99,11 +99,14 @@ function AnimalesPage() {
 
       return () => {
         audio1.removeEventListener('ended', () => {})
+        audio1.pause()
       }
     }, 2000) // Esperar 2 segundos para que sea perceptible
 
-    return () => {}
-  }, [])
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [fraseDiapositiva11Audio, hazClicAudio])
 
   useEffect(() => {
     if (clickedAnimal) {

@@ -13,7 +13,6 @@ import seleccionPersonas from '../assets/Images/Iconos_palabras/seleccion_person
 import seleccionTransporte from '../assets/Images/Iconos_palabras/seleccion_transporte.png'
 import MenuTab from '../components/MenuTab'
 import frasePalabrasAudio from '../assets/Audios/palabras/words/frase_palabras diapositiva 8.m4a'
-import palabrasAudio from '../assets/Audios/presentacion/mode-selection/palabras_presentación.m4a'
 import animalesAudio from '../assets/Audios/palabras/words/animales_diapositiva 8.m4a'
 import coloresAudio from '../assets/Audios/palabras/words/colores_diapositiva 8.m4a'
 import comidaAudio from '../assets/Audios/palabras/words/comida_diapositiva 8.m4a'
@@ -37,8 +36,10 @@ function WordsPage() {
       })
     }, 500)
 
-    return () => clearTimeout(timer)
-  }, [])
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [frasePalabrasAudio])
 
   // Función para reproducir audio de animales
   const handleAnimalesClick = () => {

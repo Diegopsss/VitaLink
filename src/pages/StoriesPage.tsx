@@ -6,7 +6,12 @@ import fondoSeleccion from '../assets/Images/Backgrounds/Fondos cuentos/fondo_se
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
 import returnButton from '../assets/Images/Buttons/return_button.png'
 import MenuTab from '../components/MenuTab'
+import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import '../styles/App.css'
+
+// Importar audios de cuentos
+import portadaCuentosAudio from '../assets/Audios/cuentos/portada_cuentos.m4a'
+import cuentosInstruccionesAudio from '../assets/Audios/cuentos/cuentos instrucciones_cuentos.m4a'
 
 // Importar iconos de cuentos
 import conejoPerdido from '../assets/Images/paginas_cuentos/iconos_seleccion/el_conejo_perdido.png'
@@ -19,6 +24,9 @@ function StoriesPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showSelection, setShowSelection] = useState(false)
   const navigate = useNavigate()
+  
+  // Acceder a la música de fondo global y controlar volumen
+  const { setVolume } = useBackgroundMusic()
 
   // Datos de los cuentos
   const cuentos = [
@@ -54,14 +62,42 @@ function StoriesPage() {
     }
   ]
 
-  // Efecto para mostrar la pantalla de inicio y luego cambiar a selección
+  // Efecto para manejar la reproducción de audios y cambio de pantalla
   useEffect(() => {
+    // Bajar el volumen de la música de fondo a casi nada
+    setVolume(0.02) // 2% de volumen - casi inaudible (igual que en juegos)
+    
+    // Reproducir audio de portada cuentos inmediatamente al entrar
+    const audio = new Audio(portadaCuentosAudio)
+    audio.play().catch(error => {
+      console.error('Error reproduciendo audio portada cuentos:', error)
+    })
+
+    // Timer para cambiar a selección y reproducir audio de instrucciones
     const timer = setTimeout(() => {
       setShowSelection(true)
+      
+      // Reproducir audio de cuentos instrucciones al cambiar a iconos
+      const instruccionesAudio = new Audio(cuentosInstruccionesAudio)
+      instruccionesAudio.play().catch(error => {
+        console.error('Error reproduciendo audio cuentos instrucciones:', error)
+      })
     }, 3000) // 3 segundos
 
-    return () => clearTimeout(timer)
-  }, [])
+    // Cleanup para detener audios y restaurar volumen al salir
+    return () => {
+      clearTimeout(timer)
+      audio.pause()
+      setVolume(0.05) // Restaurar al volumen normal bajo
+    }
+  }, [setVolume, portadaCuentosAudio, cuentosInstruccionesAudio])
+
+  // Cleanup adicional para restaurar volumen al salir de la página
+  useEffect(() => {
+    return () => {
+      setVolume(0.05) // Restaurar al volumen normal bajo
+    }
+  }, [setVolume])
 
   const handleCuentoClick = (route: string) => {
     navigate(route)

@@ -44,8 +44,9 @@ function CharacterPresentationPage() {
 
     return () => {
       audio1.removeEventListener('ended', handleFirstAudioEnd)
+      audio1.pause()
     }
-  }, [])
+  }, [holaNuevoAmigoAudio, comencemosAudio])
 
   return (
     <div

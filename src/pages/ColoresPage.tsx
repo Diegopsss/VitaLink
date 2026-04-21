@@ -16,10 +16,19 @@ import amarilloAudio from '../assets/Audios/palabras/colores/amarillo_palabras.m
 import azulAudio from '../assets/Audios/palabras/colores/azul_palabras.m4a'
 import rojoAudio from '../assets/Audios/palabras/colores/rojo_palabras.m4a'
 import verdeAudio from '../assets/Audios/palabras/colores/verde_palabras.m4a'
+import buenTrabajoExtra from '../assets/Audios/extras_ganar/buen trabajo_ extra.m4a'
+import felicidadesExtra from '../assets/Audios/extras_ganar/felicidades_extra.m4a'
+import muyBienExtra from '../assets/Audios/extras_ganar/muy bien_extra.m4a'
+import confioEnTiDeNuevo from '../assets/Audios/extras_perder/confío en ti_ de nuevo .m4a'
+import intentaloDeNuevo from '../assets/Audios/extras_perder/inténtalo de nuevo_ extras.m4a'
+import noTePreocupes from '../assets/Audios/extras_perder/no te preocupes_extras.m4a'
+import yaCasiExtra from '../assets/Audios/extras_perder/ya casi_extras.m4a'
 
 function ColoresPage() {
   const [currentView, setCurrentView] = useState<'initial' | 'colorButtons'>('initial')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [completedColors, setCompletedColors] = useState<Set<string>>(new Set())
+  const [gameCompleted, setGameCompleted] = useState(false)
   
   // Acceder a la música de fondo y bajar el volumen para esta página
   const { setVolume } = useBackgroundMusic()
@@ -33,6 +42,28 @@ function ColoresPage() {
       setVolume(0.25) // Volumen normal
     }
   }, [setVolume])
+
+  // Función para reproducir audio aleatorio de felicitación
+  const playRandomWinAudio = () => {
+    const winAudios = [buenTrabajoExtra, felicidadesExtra, muyBienExtra]
+    const randomAudio = winAudios[Math.floor(Math.random() * winAudios.length)]
+    const audio = new Audio(randomAudio)
+    audio.volume = 0.6
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio de felicitación:', error)
+    })
+  }
+
+  // Función para reproducir audio aleatorio de derrota
+  const playRandomLoseAudio = () => {
+    const loseAudios = [confioEnTiDeNuevo, intentaloDeNuevo, noTePreocupes, yaCasiExtra]
+    const randomAudio = loseAudios[Math.floor(Math.random() * loseAudios.length)]
+    const audio = new Audio(randomAudio)
+    audio.volume = 0.6
+    audio.play().catch(error => {
+      console.log('Error reproduciendo audio de derrota:', error)
+    })
+  }
 
   // Funciones para reproducir audios específicos de colores
   const handleColorClick = (colorName: string) => {
@@ -59,11 +90,31 @@ function ColoresPage() {
     audio.play().catch(error => {
       console.log(`Error reproduciendo audio ${colorName}:`, error)
     })
+
+    // Verificar si ya se había completado este color (equivocación)
+    if (completedColors.has(colorName)) {
+      playRandomLoseAudio()
+      return
+    }
+
+    // Marcar color como completado y verificar si se completó el juego
+    const newCompletedColors = new Set(completedColors)
+    newCompletedColors.add(colorName)
+    setCompletedColors(newCompletedColors)
+
+    // Verificar si se completaron todos los colores
+    const allColors = ['Verde', 'Amarillo', 'Rojo', 'Azul']
+    const isComplete = allColors.every(color => newCompletedColors.has(color))
+    
+    if (isComplete && !gameCompleted) {
+      setGameCompleted(true)
+      playRandomWinAudio()
+    }
   }
 
   useEffect(() => {
     // Esperar a que termine el audio de colores (3 segundos de retraso)
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       // Reproducir audio 'frase_diapositiva 9' antes del cambio de página
       const audio1 = new Audio(fraseDiapositiva9Audio)
       audio1.play().catch(error => {
@@ -77,11 +128,14 @@ function ColoresPage() {
 
       return () => {
         audio1.removeEventListener('ended', () => {})
+        audio1.pause()
       }
     }, 1000) // Esperar 1 segundo para reducir el tiempo de espera
 
-    return () => {}
-  }, [])
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [fraseDiapositiva9Audio])
 
   return (
     <div
@@ -91,14 +145,15 @@ function ColoresPage() {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        minHeight: '100vh',
-        width: '100%',
+        height: '600px',
+        width: '1024px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
         overflow: 'hidden',
         transition: 'background-color 1s ease-in-out',
+        padding: '20px',
       }}
     >
       {/* Botón sidebar */}

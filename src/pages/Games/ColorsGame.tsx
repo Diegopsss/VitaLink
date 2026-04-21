@@ -14,6 +14,13 @@ import rojoAudio from '../../assets/Audios/juegos/secuencia colores/extra rojo_s
 import azulAudio from '../../assets/Audios/juegos/secuencia colores/extra azul_secuencia.m4a';
 import verdeAudio from '../../assets/Audios/juegos/secuencia colores/extra verde_secuencia.m4a';
 import amarilloAudio from '../../assets/Audios/juegos/secuencia colores/extra amarillo_secuencia.m4a';
+import buenTrabajoExtra from '../../assets/Audios/extras_ganar/buen trabajo_ extra.m4a';
+import felicidadesExtra from '../../assets/Audios/extras_ganar/felicidades_extra.m4a';
+import muyBienExtra from '../../assets/Audios/extras_ganar/muy bien_extra.m4a';
+import confioEnTiDeNuevo from '../../assets/Audios/extras_perder/confío en ti_ de nuevo .m4a';
+import intentaloDeNuevo from '../../assets/Audios/extras_perder/inténtalo de nuevo_ extras.m4a';
+import noTePreocupes from '../../assets/Audios/extras_perder/no te preocupes_extras.m4a';
+import yaCasiExtra from '../../assets/Audios/extras_perder/ya casi_extras.m4a';
 
 type ColorId = 'rojo' | 'azul' | 'verde' | 'amarillo';
 
@@ -33,6 +40,28 @@ const colors: ColorButton[] = [
 function ColorsGame() {
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    // Función para reproducir audio aleatorio de felicitación
+    const playRandomWinAudio = () => {
+        const winAudios = [buenTrabajoExtra, felicidadesExtra, muyBienExtra];
+        const randomAudio = winAudios[Math.floor(Math.random() * winAudios.length)];
+        const audio = new Audio(randomAudio);
+        audio.volume = 0.6;
+        audio.play().catch(error => {
+            console.log('Error reproduciendo audio de felicitación:', error);
+        });
+    };
+
+    // Función para reproducir audio aleatorio de derrota
+    const playRandomLoseAudio = () => {
+        const loseAudios = [confioEnTiDeNuevo, intentaloDeNuevo, noTePreocupes, yaCasiExtra];
+        const randomAudio = loseAudios[Math.floor(Math.random() * loseAudios.length)];
+        const audio = new Audio(randomAudio);
+        audio.volume = 0.6;
+        audio.play().catch(error => {
+            console.log('Error reproduciendo audio de derrota:', error);
+        });
+    };
 
     // Función para reproducir audio específico de cada color
     const playColorAudio = (colorId: ColorId) => {
@@ -93,6 +122,9 @@ function ColorsGame() {
         setUserSequence([]);
         setScore(newSequence.length);
         playSequence(newSequence);
+        
+        // Reproducir audio aleatorio de felicitación al completar ronda
+        playRandomWinAudio();
     };
 
     const playSequence = async (seq: ColorId[]) => {
@@ -140,6 +172,7 @@ function ColorsGame() {
         if (newUserSequence[currentIndex] !== sequence[currentIndex]) {
             setGameOver(true);
             setIsWaitingForUser(false);
+            playRandomLoseAudio(); // Reproducir audio aleatorio de derrota
             return;
         }
 
