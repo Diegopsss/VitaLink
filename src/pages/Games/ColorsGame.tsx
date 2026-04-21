@@ -9,6 +9,7 @@ import amarilloImg from '../../assets/Images/iconos_juego/Secuencia colores/amar
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png';
 import returnButton from '../../assets/Images/Buttons/return_button.png';
 import MenuTab from '../../components/MenuTab';
+import { setColor, turnOff, getPiUrl } from '../../services/piApi';
 import secuenciaColoresAudio from '../../assets/Audios/juegos/secuencia colores/secuencia de colores_instrucciones.m4a';
 import rojoAudio from '../../assets/Audios/juegos/secuencia colores/extra rojo_secuencia.m4a';
 import azulAudio from '../../assets/Audios/juegos/secuencia colores/extra azul_secuencia.m4a';
@@ -98,14 +99,15 @@ function ColorsGame() {
     const playSequence = async (seq: ColorId[]) => {
         setIsPlaying(true);
         setIsWaitingForUser(false);
-        
+        const hasPi = !!getPiUrl();
+
         for (let i = 0; i < seq.length; i++) {
             await new Promise(resolve => {
                 timeoutRef.current = setTimeout(() => {
                     setHighlightedColor(seq[i]);
                     setCurrentStep(i);
-                    // Reproducir audio del color cuando se ilumina
                     playColorAudio(seq[i]);
+                    if (hasPi) setColor(seq[i]).catch(() => {});
                     resolve(undefined);
                 }, 600);
             });
@@ -113,6 +115,7 @@ function ColorsGame() {
             await new Promise(resolve => {
                 timeoutRef.current = setTimeout(() => {
                     setHighlightedColor(null);
+                    if (hasPi) turnOff().catch(() => {});
                     resolve(undefined);
                 }, 600);
             });

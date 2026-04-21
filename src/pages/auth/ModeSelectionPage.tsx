@@ -170,6 +170,7 @@ function ModeSelectionPage() {
               }}
             />
           </Link>
+
       </motion.div>
       
       {/* Menú pestaña desplegable */}
