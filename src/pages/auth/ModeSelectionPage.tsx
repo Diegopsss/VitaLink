@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { getMasterVolume } from '../../services/audioVolume'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useBackgroundMusic } from '../../contexts/BackgroundMusicContext'
@@ -24,6 +25,7 @@ function ModeSelectionPage() {
   // Reproducir audio 'diapositiva 7' al cargar la página
   useEffect(() => {
     const audio = new Audio(diapositiva7Audio)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log('Error reproduciendo audio diapositiva 7:', error)
     })
@@ -33,6 +35,7 @@ function ModeSelectionPage() {
   const handleJuegosClick = (e: React.MouseEvent) => {
     e.preventDefault()
     const audio = new Audio(juegosAudio)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log('Error reproduciendo audio juegos:', error)
     })
@@ -45,6 +48,7 @@ function ModeSelectionPage() {
   const handleCuentosClick = (e: React.MouseEvent) => {
     e.preventDefault()
     const audio = new Audio(cuentosAudio)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log('Error reproduciendo audio cuentos:', error)
     })
@@ -57,6 +61,7 @@ function ModeSelectionPage() {
   const handlePalabrasClick = (e: React.MouseEvent) => {
     e.preventDefault()
     const audio = new Audio(palabrasAudio)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log('Error reproduciendo audio palabras:', error)
     })

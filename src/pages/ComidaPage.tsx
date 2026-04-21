@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { getMasterVolume } from '../services/audioVolume'
 import baseAprender from '../assets/Images/Backgrounds/base_aprender.svg'
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
 import returnButton from '../assets/Images/Buttons/return_button.png'
@@ -64,6 +65,7 @@ function ComidaPage() {
     }
     
     const audio = new Audio(audioFile)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log(`Error reproduciendo audio ${foodName}:`, error)
     })
@@ -74,6 +76,7 @@ function ComidaPage() {
     setTimeout(() => {
       // Reproducir audio 'frase_diapositiva 18' antes del cambio de página
       const audio1 = new Audio(fraseDiapositiva18Audio)
+      audio1.volume = getMasterVolume()
       audio1.play().catch(error => {
         console.log('Error reproduciendo audio frase diapositiva 18:', error)
       })
@@ -84,6 +87,7 @@ function ComidaPage() {
         
         // Reproducir audio 'frase_diapositiva 19' con el plato vacío
         const audio2 = new Audio(fraseDiapositiva19Audio)
+        audio2.volume = getMasterVolume()
         audio2.play().catch(error => {
           console.log('Error reproduciendo audio frase diapositiva 19:', error)
         })

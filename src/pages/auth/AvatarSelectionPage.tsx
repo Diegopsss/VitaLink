@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getMasterVolume } from '../../services/audioVolume'
 import { motion } from 'framer-motion'
 import fondoGeneral from '../../assets/Images/Backgrounds/fondo_general.svg'
 import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png'
@@ -19,6 +20,7 @@ function AvatarSelectionPage() {
   // Efecto para reproducir audio al cargar la página
   useEffect(() => {
     const audio = new Audio(avatarSelectionAudio)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log('Error reproduciendo audio avatar selection:', error)
     })

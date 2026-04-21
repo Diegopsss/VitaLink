@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { getMasterVolume } from '../../services/audioVolume'
 import fondoCarro from '../../assets/Images/Backgrounds/fondos juegos/fondo_carro.svg'
 import cocheJuego from '../../assets/Images/iconos_juego/Carro/coche_juego.png'
 import flechaIzquierda from '../../assets/Images/iconos_juego/Carro/flecha_izquierda.png'
@@ -75,7 +76,7 @@ function CarGames() {
         
         // Crear y reproducir nuevo audio
         const audio = new Audio(audioFile)
-        audio.volume = 0.5 // Volumen más alto para los audios de lugares
+        audio.volume = getMasterVolume() * 0.5
         currentLocationAudioRef.current = audio // Guardar referencia
         
         audio.play().catch(error => {
@@ -108,7 +109,7 @@ function CarGames() {
         
         // Reproducir audio de instrucciones al entrar
         const audio = new Audio(instrucciones1Audio)
-        audio.volume = 0.6 // Volumen alto para instrucciones
+        audio.volume = getMasterVolume() * 0.6
         audio.play().catch(error => {
             console.log('Error reproduciendo instrucciones:', error)
         })
@@ -233,7 +234,7 @@ function CarGames() {
         if (gameStarted && gameAudioRef.current) {
             const playAudio = async () => {
                 try {
-                    gameAudioRef.current!.volume = 0.03 // Volumen audible pero de fondo (3%)
+                    gameAudioRef.current!.volume = getMasterVolume() * 0.03
                     await gameAudioRef.current!.play()
                     console.log('Audio del juego iniciado')
                 } catch (error) {

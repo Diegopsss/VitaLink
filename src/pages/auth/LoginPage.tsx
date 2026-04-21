@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { getMasterVolume } from '../../services/audioVolume'
 import { motion } from 'framer-motion'
 import fondoGeneral from '../../assets/Images/Backgrounds/fondo_general.svg'
 import zorro from '../../assets/Images/FoxImage/zorro_pagina_2,3.png'
@@ -36,6 +37,7 @@ function LoginPage() {
     // Crear elemento de audio
     const audio = new Audio()
     audioRef.current = audio
+    audio.volume = getMasterVolume()
 
     // Reproducir primer audio "quien jugara"
     audio.src = quienJugaraAudio

@@ -12,6 +12,7 @@ import azulButton from '../assets/Images/Buttons/azul_button.png'
 import MenuTab from '../components/MenuTab'
 import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import { setColor, turnOff, getPiUrl } from '../services/piApi'
+import { getMasterVolume } from '../services/audioVolume'
 import fraseDiapositiva9Audio from '../assets/Audios/palabras/colores/frase_diapositiva 9.m4a'
 import amarilloAudio from '../assets/Audios/palabras/colores/amarillo_palabras.m4a'
 import azulAudio from '../assets/Audios/palabras/colores/azul_palabras.m4a'
@@ -58,6 +59,7 @@ function ColoresPage() {
     }
     
     const audio = new Audio(audioFile)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log(`Error reproduciendo audio ${colorName}:`, error)
     })

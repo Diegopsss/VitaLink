@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import { getPiUrl, setPiUrl } from '../services/piApi'
+import { setMasterVolume } from '../services/audioVolume'
 
 interface MenuTabProps {
   isOpen: boolean
@@ -19,7 +20,7 @@ function GearIcon() {
 }
 
 function MenuTab({ isOpen, onClose }: MenuTabProps) {
-  const [volume, setVolume] = useState(50)
+  const [volume, setVolume] = useState(100)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [piUrlInput, setPiUrlInput] = useState(getPiUrl() ?? '')
   const [piUrlSaved, setPiUrlSaved] = useState(false)
@@ -43,7 +44,9 @@ function MenuTab({ isOpen, onClose }: MenuTabProps) {
   }
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVolume(Number(e.target.value))
+    const val = Number(e.target.value)
+    setVolume(val)
+    setMasterVolume(val / 100)
   }
 
   const handleOpenSettings = () => {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
+import { getMasterVolume } from '../services/audioVolume'
 import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import fondoGeneral from '../assets/Images/Backgrounds/fondo_general.svg'
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
@@ -31,6 +32,7 @@ function WordsPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       const audio = new Audio(frasePalabrasAudio)
+      audio.volume = getMasterVolume()
       audio.play().catch(error => {
         console.log('Error reproduciendo audio frase palabras:', error)
       })
@@ -42,6 +44,7 @@ function WordsPage() {
   // Función para reproducir audio de animales
   const handleAnimalesClick = () => {
     const audio = new Audio(animalesAudio)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log('Error reproduciendo audio animales:', error)
     })
@@ -51,6 +54,7 @@ function WordsPage() {
   // Función para reproducir audio de colores
   const handleColoresClick = () => {
     const audio = new Audio(coloresAudio)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log('Error reproduciendo audio colores:', error)
     })
@@ -60,6 +64,7 @@ function WordsPage() {
   // Función para reproducir audio de comida
   const handleComidaClick = () => {
     const audio = new Audio(comidaAudio)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log('Error reproduciendo audio comida:', error)
     })
@@ -69,6 +74,7 @@ function WordsPage() {
   // Función para reproducir audio de música
   const handleMusicaClick = () => {
     const audio = new Audio(musicaAudio)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log('Error reproduciendo audio música:', error)
     })
@@ -78,6 +84,7 @@ function WordsPage() {
   // Función para reproducir audio de personas
   const handlePersonasClick = () => {
     const audio = new Audio(familiaAudio)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log('Error reproduciendo audio personas:', error)
     })
@@ -87,6 +94,7 @@ function WordsPage() {
   // Función para reproducir audio de transporte
   const handleTransporteClick = () => {
     const audio = new Audio(transporteAudio)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log('Error reproduciendo audio transporte:', error)
     })

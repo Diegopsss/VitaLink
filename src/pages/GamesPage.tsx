@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { getMasterVolume } from '../services/audioVolume'
 import { useBackgroundMusic } from '../contexts/BackgroundMusicContext'
 import inicioJuegos from '../assets/Images/Backgrounds/inicio_juegos.svg'
 import sidebarButton from '../assets/Images/Buttons/sidebar_button.png'
@@ -27,6 +28,7 @@ function GamesPage() {
   // Reproducir audio 'frase interfaz_juegos' al cargar la página
   useEffect(() => {
     const audio = new Audio(fraseInterfazJuegosAudio)
+    audio.volume = getMasterVolume()
     audio.play().catch(error => {
       console.log('Error reproduciendo audio frase interfaz_juegos:', error)
     })
@@ -71,6 +73,7 @@ function GamesPage() {
   const handleGameClick = (route: string, audioFile?: string) => {
     if (audioFile) {
       const audio = new Audio(audioFile)
+      audio.volume = getMasterVolume()
       audio.play().catch(error => {
         console.log('Error reproduciendo audio:', error)
       })

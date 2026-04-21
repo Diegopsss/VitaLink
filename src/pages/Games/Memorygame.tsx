@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { getMasterVolume } from '../../services/audioVolume'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import fondoMemorama from '../../assets/Images/Backgrounds/fondos juegos/fondo_memorama.svg'
@@ -160,6 +161,7 @@ function MemoryGame() {
         
         // Reproducir audio de instrucciones al iniciar el juego
         const audio = new Audio(memoriaInstruccionesAudio)
+        audio.volume = getMasterVolume()
         audio.play().catch(error => {
             console.log('Error reproduciendo audio de instrucciones:', error)
         })
@@ -219,6 +221,7 @@ function MemoryGame() {
         // Reproducir audio de la carta
         if (cards[index].audio) {
             const audio = new Audio(cards[index].audio)
+            audio.volume = getMasterVolume()
             audio.play().catch(error => {
                 console.log('Error reproduciendo audio de carta:', error)
             })

@@ -10,6 +10,7 @@ import sidebarButton from '../../assets/Images/Buttons/sidebar_button.png';
 import returnButton from '../../assets/Images/Buttons/return_button.png';
 import MenuTab from '../../components/MenuTab';
 import { setColor, turnOff, getPiUrl } from '../../services/piApi';
+import { getMasterVolume } from '../../services/audioVolume';
 import secuenciaColoresAudio from '../../assets/Audios/juegos/secuencia colores/secuencia de colores_instrucciones.m4a';
 import rojoAudio from '../../assets/Audios/juegos/secuencia colores/extra rojo_secuencia.m4a';
 import azulAudio from '../../assets/Audios/juegos/secuencia colores/extra azul_secuencia.m4a';
@@ -57,7 +58,7 @@ function ColorsGame() {
         }
         
         const audio = new Audio(audioFile);
-        audio.volume = 0.6; // Volumen alto para colores
+        audio.volume = getMasterVolume() * 0.6;
         audio.play().catch(error => {
             console.log(`Error reproduciendo audio del color:`, error);
         });
@@ -66,7 +67,7 @@ function ColorsGame() {
     // Efecto para reproducir audio de instrucciones al entrar
     useEffect(() => {
         const audio = new Audio(secuenciaColoresAudio);
-        audio.volume = 0.7; // Volumen alto para instrucciones
+        audio.volume = getMasterVolume() * 0.7;
         audio.play().catch(error => {
             console.log('Error reproduciendo instrucciones de colores:', error);
         });
@@ -81,6 +82,15 @@ function ColorsGame() {
     const [highlightedColor, setHighlightedColor] = useState<ColorId | null>(null);
     const [isWaitingForUser, setIsWaitingForUser] = useState(false);
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const blinkRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    const stopLedBlink = () => {
+        if (blinkRef.current) {
+            clearInterval(blinkRef.current);
+            blinkRef.current = null;
+        }
+        if (getPiUrl()) turnOff().catch(() => {});
+    };
 
     const getRandomColor = (): ColorId => {
         const randomIndex = Math.floor(Math.random() * colors.length);
@@ -158,7 +168,19 @@ function ColorsGame() {
         }
     };
 
+    useEffect(() => {
+        if (gameOver && getPiUrl()) {
+            let ledOn = false;
+            blinkRef.current = setInterval(() => {
+                ledOn = !ledOn;
+                (ledOn ? setColor('rojo') : turnOff()).catch(() => {});
+            }, 500);
+        }
+        return () => { if (gameOver) stopLedBlink(); };
+    }, [gameOver]);
+
     const startGame = () => {
+        stopLedBlink();
         setGameStarted(true);
         setGameOver(false);
         setSequence([]);
@@ -452,7 +474,7 @@ function ColorsGame() {
                                 Jugar de Nuevo
                             </motion.button>
                             <motion.button
-                                onClick={() => navigate('/games')}
+                                onClick={() => { stopLedBlink(); navigate('/games'); }}
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.95 }}
                                 style={{
